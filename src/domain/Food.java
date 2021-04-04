@@ -9,5 +9,6 @@ public class Food extends GameObject{
         super.getShapeR().setFill(Color.color(0.8,0.5,0.0));
         super.getShapeR().setX(x);
         super.getShapeR().setY(y);
+        super.setTypeO('f');
     }
 }

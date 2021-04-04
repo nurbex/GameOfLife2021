@@ -11,9 +11,9 @@ import java.util.List;
 public class GUIcontroller<i> {
     private Boolean start = true;
     private int cellPopulation=10;
-    private int foodAmount=10;
+    private int foodAmount=100;
     private int poisonAmount=10;
-    private int stones=10;
+    private int stones=40;
     @FXML
     private Pane gameArena = new Pane();
 
@@ -21,62 +21,23 @@ public class GUIcontroller<i> {
     private Button startButton = new Button();
 
     private List<GameObject> allGameObjects= new ArrayList<>();
+    private List<CellLife> allCells= new ArrayList<>();
+
+    //what cell sees and does
+    private void cellsLiving(){
+        if(!(allCells.isEmpty())){
+            for(CellLife e: allCells){
+                e.cellSeesAndActs(allGameObjects, allCells, gameArena);
+            }
+            allCells.removeIf(CellLife::getIsDead);
+        }
+    }
 
     private void startingContent(){
-        //creating cell population
-        int c = 0;
-        while(c<cellPopulation){
-            boolean match=false;
-            int x= ((int) (Math.random()*gameArena.getPrefWidth()/10))*10;
-            int y= ((int) (Math.random()*gameArena.getPrefHeight()/10))*10;
-            for(GameObject e: allGameObjects){
-                if((e.getShapeR().getX() == x)&&(e.getShapeR().getY() == y)){
-                    match=true;
-                }
-            }
-            if(!match){
-                allGameObjects.add(new CellLife(x,y));
-                c++;
-                System.out.println(c + " c " + x + "," + y);
-            }
-        }
-        //creating food amount
-        int f = 0;
-        while(f<cellPopulation){
-            boolean match=false;
-            int x= ((int) (Math.random()*gameArena.getPrefWidth()/10))*10;
-            int y= ((int) (Math.random()*gameArena.getPrefHeight()/10))*10;
-            for(GameObject e: allGameObjects){
-                if((e.getShapeR().getX() == x)&&(e.getShapeR().getY() == y)){
-                    match=true;
-                }
-            }
-            if(!match){
-                allGameObjects.add(new Food(x,y));
-                f++;
-                System.out.println(f + " f " + x + "," + y);
-            }
-        }
-        //creating poison amount
-        int p = 0;
-        while(p<cellPopulation){
-            boolean match=false;
-            int x= ((int) (Math.random()*gameArena.getPrefWidth()/10))*10;
-            int y= ((int) (Math.random()*gameArena.getPrefHeight()/10))*10;
-            for(GameObject e: allGameObjects){
-                if((e.getShapeR().getX() == x)&&(e.getShapeR().getY() == y)){
-                    match=true;
-                }
-            }
-            if(!match){
-                allGameObjects.add(new Poison(x,y));
-                p++;
-                System.out.println(p + " p " + x + "," + y);
-            }
-        }
+
         //creating stones
         int s = 0;
-        while(s<cellPopulation){
+        while(s<stones){
             boolean match=false;
             int x= ((int) (Math.random()*gameArena.getPrefWidth()/10))*10;
             int y= ((int) (Math.random()*gameArena.getPrefHeight()/10))*10;
@@ -88,7 +49,65 @@ public class GUIcontroller<i> {
             if(!match){
                 allGameObjects.add(new Stone(x,y));
                 s++;
-                System.out.println(s + " s " + x + "," + y);
+                //System.out.println(s + " s " + x + "," + y);
+            }
+        }
+        //creating food amount
+        int f = 0;
+        while(f<foodAmount){
+            boolean match=false;
+            int x= ((int) (Math.random()*gameArena.getPrefWidth()/10))*10;
+            int y= ((int) (Math.random()*gameArena.getPrefHeight()/10))*10;
+            for(GameObject e: allGameObjects){
+                if((e.getShapeR().getX() == x)&&(e.getShapeR().getY() == y)){
+                    match=true;
+                }
+            }
+            if(!match){
+                allGameObjects.add(new Food(x,y));
+                f++;
+                //System.out.println(f + " f " + x + "," + y);
+            }
+        }
+        //creating poison amount
+        int p = 0;
+        while(p<poisonAmount){
+            boolean match=false;
+            int x= ((int) (Math.random()*gameArena.getPrefWidth()/10))*10;
+            int y= ((int) (Math.random()*gameArena.getPrefHeight()/10))*10;
+            for(GameObject e: allGameObjects){
+                if((e.getShapeR().getX() == x)&&(e.getShapeR().getY() == y)){
+                    match=true;
+                }
+            }
+            if(!match){
+                allGameObjects.add(new Poison(x,y));
+                p++;
+                //System.out.println(p + " p " + x + "," + y);
+            }
+        }
+        //creating cell population
+        int c = 0;
+        while(c<cellPopulation){
+            boolean match=false;
+            boolean matchCellList=false;
+            int x= ((int) (Math.random()*gameArena.getPrefWidth()/10))*10;
+            int y= ((int) (Math.random()*gameArena.getPrefHeight()/10))*10;
+            for(GameObject e: allGameObjects){
+                if((e.getShapeR().getX() == x)&&(e.getShapeR().getY() == y)){
+                    match=true;
+                }
+            }
+            for(CellLife e: allCells){
+                if((e.getShapeR().getX() == x)&&(e.getShapeR().getY() == y)){
+                    matchCellList=true;
+                }
+            }
+            if((!match)&&(!matchCellList)){
+                allCells.add(new CellLife(x,y));
+                allCells.get(allCells.size()-1).setRandomIsLooking();
+                c++;
+                //System.out.println(allCells.get(allCells.size()-1).getIsLooking());
             }
         }
 
@@ -96,16 +115,19 @@ public class GUIcontroller<i> {
         for(GameObject e: allGameObjects){
             gameArena.getChildren().add(e.getShapeR());
         }
-
-        /*for(int i=0;i<30;i++){
-            for(int j=0;j<30;j++){
-                gameArena.getChildren().add(new CellLife(i*10,j*10).getShapeR());
-            }
-        }*/
+        for(CellLife e: allCells){
+            gameArena.getChildren().add(e.getShapeR());
+        }
     }
 
     private void createContent(){
-
+        cellsLiving();
+        for(GameObject e: allGameObjects){
+            gameArena.getChildren().add(e.getShapeR());
+        }
+        for(CellLife e: allCells){
+            gameArena.getChildren().add(e.getShapeR());
+        }
     }
 
     private void removeContent(){
@@ -113,32 +135,24 @@ public class GUIcontroller<i> {
         gameArena.getChildren().remove(0,gameArena.getChildren().size());
     }
 
-    private Boolean contentIsEmpty(){
-        return gameArena.getChildren().isEmpty();
-    }
-
     private void onUpdate(){
-        if(contentIsEmpty()){
-            startingContent();
-        } else {
+        if(allCells.isEmpty()){
             removeContent();
             startingContent();
+        }else{
+            gameArena.getChildren().remove(0,gameArena.getChildren().size());
+            createContent();
         }
-        createContent();
     }
     @FXML
     private void startButtonOnAction(){
-        //startButton.setDisable(true);
- /*       AnimationTimer timer= new AnimationTimer() {
+        startButton.setDisable(true);
+        AnimationTimer timer= new AnimationTimer() {
             @Override
             public void handle(long now) {
-                if(i==1){
-                    onUpdate();
-                    i++;
-                }
+                onUpdate();
             }
         };
-        timer.start();*/
-        onUpdate();
+        timer.start();
     }
 }

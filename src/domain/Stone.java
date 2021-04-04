@@ -9,5 +9,6 @@ public class Stone extends GameObject{
         super.getShapeR().setFill(Color.color(0.3,0.3,0.3));
         super.getShapeR().setX(x);
         super.getShapeR().setY(y);
+        super.setTypeO('s');
     }
 }

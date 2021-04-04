@@ -9,5 +9,6 @@ public class Poison extends GameObject{
         super.getShapeR().setFill(Color.color(0.9,0.3,0.5));
         super.getShapeR().setX(x);
         super.getShapeR().setY(y);
+        super.setTypeO('p');
     }
 }
