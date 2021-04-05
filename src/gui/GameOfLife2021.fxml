@@ -84,8 +84,8 @@
     </MenuBar>
     <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
          <children>
-            <Pane fx:id="gameArena" layoutX="16.0" layoutY="14.0" prefHeight="300.0" prefWidth="600.0" style="-fx-background-color: #dddddd;" />
-            <Button fx:id="startButton" layoutX="290.0" layoutY="334.0" mnemonicParsing="false" onAction="#startButtonOnAction" text="START" />
+            <Pane fx:id="gameArena" layoutX="16.0" layoutY="14.0" prefHeight="300.0" prefWidth="300.0" style="-fx-background-color: #dddddd;" />
+            <Button fx:id="startButton" layoutX="141.0" layoutY="334.0" mnemonicParsing="false" onAction="#startButtonOnAction" text="START" />
          </children>
     </AnchorPane>
   </children>

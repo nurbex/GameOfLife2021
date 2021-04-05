@@ -16,18 +16,33 @@ public class CellLife extends GameObject{
         super.getShapeR().setX(x);
         super.getShapeR().setY(y);
         super.setTypeO('c');
+        cellEyes.add(new CellEye());
+        cellEyes.add(new CellEye());
+        cellEyes.add(new CellEye());
+        cellEyes.add(new CellEye());
+        cellEyes.add(new CellEye());
+        cellEyes.add(new CellEye());
+        cellEyes.add(new CellEye());
     }
     //creating cell properties
     private String cellID= UUID.randomUUID().toString();
     private int cellGeneration;
+    private int lifeTime=0;
     private int cellFat =200;
     private char isLooking = 'n';
     //getting data from GUI controller
-    private Pane gameArena = new Pane();
-    private List<GameObject> allGameObjects= new ArrayList<>();
-    private List<CellLife> allCells= new ArrayList<>();
     private boolean hitWall=false;
     private List<CellEye> cellEyes=new ArrayList<>();
+    private void addEyes(){
+        cellEyes.add(new CellEye());
+        cellEyes.add(new CellEye());
+        cellEyes.add(new CellEye());
+        cellEyes.add(new CellEye());
+        cellEyes.add(new CellEye());
+        cellEyes.add(new CellEye());
+        cellEyes.add(new CellEye());
+    }
+
     //0.eyeN 1.eyeNN 2.eyeNW 3.eyeNE 4.eyeW 5.eyeE 6.eyeS
     // cells eyes scheme, o for eyes, @ for cell it self, looking north(n)
     //     o
@@ -36,10 +51,16 @@ public class CellLife extends GameObject{
     //     o
 
     //creating brain of cell
-    private Brain brain=new Brain(cellEyes);
+    private Brain brain=new Brain();
 
 
     //creating getters and setters
+    public void setLifeTime(int lifeTime){
+        this.lifeTime=lifeTime;
+    }
+    public int getLifeTime(){
+        return lifeTime;
+    }
     public String getCellID(){
         return cellID;
     }
@@ -83,10 +104,7 @@ public class CellLife extends GameObject{
     }
 
     //methods
-    public void cellSeesAndActs(List<GameObject> allGameObjects, List<CellLife> allCells, Pane gameArena){
-        this.allGameObjects=allGameObjects;
-        this.allCells=allCells;
-        this.gameArena=gameArena;
+    public void cellSees(List<GameObject> allGameObjects, List<CellLife> allCells, Pane gameArena){
         //data set
         char faceDirection=getIsLooking();
         double x = super.getShapeR().getX();
@@ -94,72 +112,77 @@ public class CellLife extends GameObject{
         //action
         switch (faceDirection){
             case 'n':
-                cellEyes.add(new CellEye(x,y-10));
-                cellEyes.add(new CellEye(x,y-20));
-                cellEyes.add(new CellEye(x-10,y-10));
-                cellEyes.add(new CellEye(x+10,y-10));
-                cellEyes.add(new CellEye(x-10,y));
-                cellEyes.add(new CellEye(x+10,y));
-                cellEyes.add(new CellEye(x,y+10));
+                cellEyes.get(0).setXY(x,y-10);
+                cellEyes.get(1).setXY(x,y-20);
+                cellEyes.get(2).setXY(x-10,y-10);
+                cellEyes.get(3).setXY(x+10,y-10);
+                cellEyes.get(4).setXY(x-10,y);
+                cellEyes.get(5).setXY(x+10,y);
+                cellEyes.get(6).setXY(x,y+10);
                 break;
             case 'e':
-                cellEyes.add(new CellEye(x+10,y));
-                cellEyes.add(new CellEye(x+20,y));
-                cellEyes.add(new CellEye(x+10,y-10));
-                cellEyes.add(new CellEye(x+10,y+10));
-                cellEyes.add(new CellEye(x,y-10));
-                cellEyes.add(new CellEye(x,y+10));
-                cellEyes.add(new CellEye(x-10,y));
+                cellEyes.get(0).setXY(x+10,y);
+                cellEyes.get(1).setXY(x+20,y);
+                cellEyes.get(2).setXY(x+10,y-10);
+                cellEyes.get(3).setXY(x+10,y+10);
+                cellEyes.get(4).setXY(x,y-10);
+                cellEyes.get(5).setXY(x,y+10);
+                cellEyes.get(6).setXY(x-10,y);
                 break;
             case 's':
-                cellEyes.add(new CellEye(x,y+10));
-                cellEyes.add(new CellEye(x,y+20));
-                cellEyes.add(new CellEye(x+10,y+10));
-                cellEyes.add(new CellEye(x-10,y+10));
-                cellEyes.add(new CellEye(x+10,y));
-                cellEyes.add(new CellEye(x-10,y));
-                cellEyes.add(new CellEye(x,y-10));
+                cellEyes.get(0).setXY(x,y+10);
+                cellEyes.get(1).setXY(x,y+20);
+                cellEyes.get(2).setXY(x+10,y+10);
+                cellEyes.get(3).setXY(x-10,y+10);
+                cellEyes.get(4).setXY(x+10,y);
+                cellEyes.get(5).setXY(x-10,y);
+                cellEyes.get(6).setXY(x,y-10);
                 break;
             case 'w':
-                cellEyes.add(new CellEye(x-10,y));
-                cellEyes.add(new CellEye(x-20,y));
-                cellEyes.add(new CellEye(x-10,y+10));
-                cellEyes.add(new CellEye(x-10,y-10));
-                cellEyes.add(new CellEye(x,y+10));
-                cellEyes.add(new CellEye(x,y-10));
-                cellEyes.add(new CellEye(x+10,y));
+                cellEyes.get(0).setXY(x-10,y);
+                cellEyes.get(1).setXY(x-20,y);
+                cellEyes.get(2).setXY(x-10,y+10);
+                cellEyes.get(3).setXY(x-10,y-10);
+                cellEyes.get(4).setXY(x,y+10);
+                cellEyes.get(5).setXY(x,y-10);
+                cellEyes.get(6).setXY(x+10,y);
                 break;
+        }
+
+        //giving default values
+        for(CellEye e: cellEyes){
+            e.setEyeSees('n');
         }
         //checking if cell eye sees wall
         for(CellEye e: cellEyes){
             if((e.getX()<=0)||(e.getX()>=(gameArena.getPrefWidth()-10))||(e.getY()<=0)||(e.getY()>=(gameArena.getPrefHeight()-10))){
                 e.setEyeSees('w');
+            }else{
+                e.setEyeSees('n');
             }
+            //System.out.println(e.getX()+" "+ e.getY()+" cell sees "+e.getEyeSees());
         }
         //checking if cell eye sees any gameObject
-        for(CellLife c: allCells){
-            for(CellEye e: c.getCellEyes()){
-                if(e.getEyeSees()=='n'){
-                    //checking if cell eye sees any other cells
-                    for(CellLife o: allCells){
-                        if((x == o.getShapeR().getX())&&(y == o.getShapeR().getY())){
-                            e.setEyeSees(o.getTypeO());
-                        }
+
+        for(CellEye e: cellEyes){
+            if(e.getEyeSees()=='n'){
+                //checking if cell eye sees any other cells
+                for(CellLife o: allCells){
+                    if((e.getX() == o.getShapeR().getX())&&(e.getY() == o.getShapeR().getY())){
+                        e.setEyeSees(o.getTypeO());
                     }
-                    //checking if cell eye sees other gameObject
-                    for(GameObject g: allGameObjects){
-                        if((x == g.getShapeR().getX())&&(y == g.getShapeR().getY())){
-                            e.setEyeSees(g.getTypeO());
-                        }
+                }
+                //checking if cell eye sees other gameObject
+                for(GameObject g: allGameObjects){
+                    if((e.getX() == g.getShapeR().getX())&&(e.getY() == g.getShapeR().getY())){
+                        e.setEyeSees(g.getTypeO());
                     }
                 }
             }
         }
-
-
     }
 
-    public void cellMoves(){
+    public void cellMoves(List<GameObject> allGameObjects, List<CellLife> allCells, Pane gameArena){
         //data set
         char faceDirection=getIsLooking();
         double x = super.getShapeR().getX();
@@ -228,7 +251,7 @@ public class CellLife extends GameObject{
         }
     }
 
-    private void cellEats(){
+    public void cellEats(List<GameObject> allGameObjects, List<CellLife> allCells, Pane gameArena){
         //data set
         char faceDirection=getIsLooking();
         double x = super.getShapeR().getX();
@@ -277,11 +300,12 @@ public class CellLife extends GameObject{
                     if(g.getTypeO() == 'f'){
                         //cell eats food and gets fat
                         g.setIsDead(true);
-                        setCellFat(getCellFat()+100);
+                        setCellFat(getCellFat()+50);
                     }
                     if(g.getTypeO() == 'p'){
                         //cell eats poison and dies
-                        setIsDead(true);
+                        //setIsDead(true);
+                        setCellFat(getCellFat()-50);
                     }
                 }
             }
@@ -290,7 +314,7 @@ public class CellLife extends GameObject{
         allGameObjects.removeIf(GameObject::getIsDead);
     }
 
-    private void cellTurnLeft(){
+    public void cellTurnLeft(){
         switch (isLooking){
             case 'n':
                 isLooking='w';
@@ -307,7 +331,7 @@ public class CellLife extends GameObject{
         }
     }
 
-    private void cellTurnRight(){
+    public void cellTurnRight(){
         switch (isLooking){
             case 'n':
                 isLooking='e';
@@ -324,7 +348,7 @@ public class CellLife extends GameObject{
         }
     }
 
-/*    //what cell sees and does
+    //what cell sees and does
     public void cellsAction(List<GameObject> allGameObjects, List<CellLife> allCells, Pane gameArena){
             //data set
             char faceDirection=getIsLooking();
@@ -422,7 +446,7 @@ public class CellLife extends GameObject{
             }
             //removes all dead gameObjects
             allGameObjects.removeIf(GameObject::getIsDead);
-    }*/
+    }
 
     //what cell sees and does
     //cell makes decision
@@ -433,9 +457,10 @@ public class CellLife extends GameObject{
     //2. e for eat
     //3. l for turn left
     //4. r for turn right
-    public void cellsThinkAndAct(){
+    public char cellsThinkAndAct(){
+        brain.cellSeesToDigits(cellEyes);
         decision= brain.cellThinking();
-        switch (decision){
+/*        switch (decision){
             case 'n':
                 cellFat--;
                 break;
@@ -455,6 +480,14 @@ public class CellLife extends GameObject{
                 cellFat--;
                 cellTurnRight();
                 break;
-        }
+        }*/
+        return decision;
+    }
+
+    public Brain getCellBrain(){
+        return brain;
+    }
+    public void cellMutates(){
+        getCellBrain().brainWRandom();
     }
 }

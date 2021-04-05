@@ -7,13 +7,15 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class GUIcontroller<i> {
     private Boolean start = true;
-    private int cellPopulation=10;
+    private int cellPopulation=20;
     private int foodAmount=100;
-    private int poisonAmount=10;
+    private int poisonAmount=50;
     private int stones=40;
+    private int generation=0;
     @FXML
     private Pane gameArena = new Pane();
 
@@ -22,13 +24,59 @@ public class GUIcontroller<i> {
 
     private List<GameObject> allGameObjects= new ArrayList<>();
     private List<CellLife> allCells= new ArrayList<>();
+    private List<CellLife> allDeadCells= new ArrayList<>();
 
     //what cell sees and does
     private void cellsLiving(){
         if(!(allCells.isEmpty())){
             for(CellLife e: allCells){
-                e.cellSeesAndActs(allGameObjects, allCells, gameArena);
+                e.cellSees(allGameObjects, allCells, gameArena);
+                switch (e.cellsThinkAndAct()){
+                    case 'n':
+                        e.setCellFat(e.getCellFat()-1);
+                        if(e.getCellFat()<=0){
+                            e.setIsDead(true);
+                        }
+                        break;
+                    case 'm':
+                        e.cellMoves(allGameObjects, allCells, gameArena);
+                        e.setCellFat(e.getCellFat()-1);
+                        if(e.getCellFat()<=0){
+                            e.setIsDead(true);
+                        }
+                        break;
+                    case 'e':
+                        e.cellEats(allGameObjects, allCells, gameArena);
+                        e.setCellFat(e.getCellFat()-1);
+                        if(e.getCellFat()<=0){
+                            e.setIsDead(true);
+                        }
+                        break;
+                    case 'l':
+                        e.cellTurnLeft();
+                        e.setCellFat(e.getCellFat()-1);
+                        if(e.getCellFat()<=0){
+                            e.setIsDead(true);
+                        }
+                        break;
+                    case 'r':
+                        e.cellTurnRight();
+                        e.setCellFat(e.getCellFat()-1);
+                        if(e.getCellFat()<=0){
+                            e.setIsDead(true);
+                        }
+                        break;
+                }
+                /*System.out.print(e.cellsThinkAndAct() + " llllll " + e.getCellFat()+" ");
+                for(int p=0;p<e.getCellEyes().size();p++){
+                    System.out.print(e.getCellEyes().get(p).getEyeSees() +" ");
+                }
+                System.out.println(" ");*/
+                e.setLifeTime(e.getLifeTime()+1);
+                //System.out.println("this is each cell lifetime"+e.getLifeTime());
             }
+            allDeadCells=allCells.stream().filter(CellLife::getIsDead).collect(Collectors.toList());
+            //System.out.println(" Dead Cell size"+allDeadCells.size());
             allCells.removeIf(CellLife::getIsDead);
         }
     }
@@ -111,13 +159,37 @@ public class GUIcontroller<i> {
             }
         }
 
-        System.out.println("current arraylist size: "+allGameObjects.size());
+        if(!start){
+
+            int max=0;
+            CellLife theLastHero = new CellLife();
+            for(CellLife w:allDeadCells){
+                if(w.getLifeTime()>max){
+                    max=w.getLifeTime();
+                    theLastHero=w;
+                }
+            }
+            allDeadCells.clear();
+            for(int t=0;t<(cellPopulation/2);t++){
+                allCells.get(t).getCellBrain().setnW(theLastHero.getCellBrain().getnW());
+                allCells.get(t).getCellBrain().setnDW(theLastHero.getCellBrain().getnDW());
+            }
+            theLastHero.cellMutates();
+            for(int t=cellPopulation/2;t<cellPopulation;t++){
+                allCells.get(t).getCellBrain().setnW(theLastHero.getCellBrain().getnW());
+                allCells.get(t).getCellBrain().setnDW(theLastHero.getCellBrain().getnDW());
+            }
+            System.out.println("this is max "+max);
+        }
+        generation++;
+        System.out.println("current generation: "+ generation);
         for(GameObject e: allGameObjects){
             gameArena.getChildren().add(e.getShapeR());
         }
         for(CellLife e: allCells){
             gameArena.getChildren().add(e.getShapeR());
         }
+        start=false;
     }
 
     private void createContent(){
