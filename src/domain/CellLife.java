@@ -311,6 +311,7 @@ public class CellLife extends GameObject{
                     if(g.getTypeO() == 'p'){
                         //cell eats poison and dies
                         //setIsDead(true);
+                        g.setIsDead(true);
                         setCellFat(getCellFat() - poisonEffect);
                     }
                 }
@@ -495,5 +496,8 @@ public class CellLife extends GameObject{
     }
     public void cellMutates(){
         getCellBrain().brainWRandom();
+    }
+    public  void cellBrainToFile(){
+        getCellBrain().brainWriteToFile();
     }
 }

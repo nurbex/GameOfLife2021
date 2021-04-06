@@ -84,7 +84,8 @@ public class Brain {
             for(int i=0;i<7;i++){
                 nW.add(new float[7]);
                 for(int z=0;z<nW.get(i).length;z++){
-                    nW.get(i)[z]=(float) (Math.random()*5-Math.random()*5);
+                    //nW.get(i)[z]=(float)(Math.random()*5-Math.random()*5);
+                    nW.get(i)[z]=(float)Math.random();
                     //System.out.print(nW.get(i)[z]+" ");
                 }
             }
@@ -108,7 +109,8 @@ public class Brain {
             for(int i=0;i<5;i++){
                 nDW.add(new float[7]);
                 for(int z=0;z<nDW.get(i).length;z++){
-                    nDW.get(i)[z]=(float) (Math.random()*5-Math.random()*5);
+                    //nDW.get(i)[z]=(float)(Math.random()*5-Math.random()*5);
+                    nDW.get(i)[z]=(float)Math.random();
                     //System.out.print(nDW.get(i)[z]+" ");
                 }
             }
@@ -130,6 +132,11 @@ public class Brain {
                 resultList[i]=resultList[i]+product;
             }
             //System.out.println(resultList[i]+" result1 for decision ");
+ /*           if(resultList[i]<0){
+                resultList[i]=0;
+            }else{
+                resultList[i]=1;
+            }*/
         }
     }
     private void calculation2(){
@@ -179,6 +186,8 @@ public class Brain {
         }else{
             randomMutationNDW();
         }
+    }
+    public void brainWriteToFile(){
         fileRepo.writeEverythingToFile(nW,nDW);
     }
 

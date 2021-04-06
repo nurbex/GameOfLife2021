@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 public class GUIcontroller<i> {
     private Boolean start = true;
     private int cellPopulation=20;
-    private int foodAmount=50;
+    private int foodAmount=40;
     private int poisonAmount=10;
     private int stones=10;
     private int generation=0;
@@ -39,14 +39,14 @@ public class GUIcontroller<i> {
                 e.cellSees(allGameObjects, allCells, gameArena);
                 switch (e.cellsThinkAndAct()){
                     case 'n':
-                        e.setCellFat(e.getCellFat()-1);
+                        e.setCellFat(e.getCellFat()-2);
                         if(e.getCellFat()<=0){
                             e.setIsDead(true);
                         }
                         break;
                     case 'm':
                         e.cellMoves(allGameObjects, allCells, gameArena);
-                        e.setCellFat(e.getCellFat()-1);
+                        e.setCellFat(e.getCellFat()-2);
                         if(e.getCellFat()<=0){
                             e.setIsDead(true);
                         }
@@ -80,14 +80,14 @@ public class GUIcontroller<i> {
                         break;
                     case 'l':
                         e.cellTurnLeft();
-                        e.setCellFat(e.getCellFat()-1);
+                        e.setCellFat(e.getCellFat()-2);
                         if(e.getCellFat()<=0){
                             e.setIsDead(true);
                         }
                         break;
                     case 'r':
                         e.cellTurnRight();
-                        e.setCellFat(e.getCellFat()-1);
+                        e.setCellFat(e.getCellFat()-2);
                         if(e.getCellFat()<=0){
                             e.setIsDead(true);
                         }
@@ -197,6 +197,7 @@ public class GUIcontroller<i> {
                     theLastHero=w;
                 }
             }
+            theLastHero.cellBrainToFile();
             allDeadCells.clear();
             for(int t=0;t<(cellPopulation/2);t++){
                 allCells.get(t).getCellBrain().setnW(theLastHero.getCellBrain().getnW());
