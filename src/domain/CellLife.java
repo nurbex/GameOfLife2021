@@ -28,7 +28,9 @@ public class CellLife extends GameObject{
     private String cellID= UUID.randomUUID().toString();
     private int cellGeneration;
     private int lifeTime=0;
-    private int cellFat =200;
+    private int cellFat =100;
+    private int foodCalories =10;
+    private int poisonEffect=5;
     private char isLooking = 'n';
     //getting data from GUI controller
     private boolean hitWall=false;
@@ -119,6 +121,7 @@ public class CellLife extends GameObject{
                 cellEyes.get(4).setXY(x-10,y);
                 cellEyes.get(5).setXY(x+10,y);
                 cellEyes.get(6).setXY(x,y+10);
+                //correct
                 break;
             case 'e':
                 cellEyes.get(0).setXY(x+10,y);
@@ -128,6 +131,7 @@ public class CellLife extends GameObject{
                 cellEyes.get(4).setXY(x,y-10);
                 cellEyes.get(5).setXY(x,y+10);
                 cellEyes.get(6).setXY(x-10,y);
+                //correct
                 break;
             case 's':
                 cellEyes.get(0).setXY(x,y+10);
@@ -137,6 +141,7 @@ public class CellLife extends GameObject{
                 cellEyes.get(4).setXY(x+10,y);
                 cellEyes.get(5).setXY(x-10,y);
                 cellEyes.get(6).setXY(x,y-10);
+                //correct
                 break;
             case 'w':
                 cellEyes.get(0).setXY(x-10,y);
@@ -146,16 +151,17 @@ public class CellLife extends GameObject{
                 cellEyes.get(4).setXY(x,y+10);
                 cellEyes.get(5).setXY(x,y-10);
                 cellEyes.get(6).setXY(x+10,y);
+
                 break;
         }
 
         //giving default values
-        for(CellEye e: cellEyes){
+        /*for(CellEye e: cellEyes){
             e.setEyeSees('n');
-        }
+        }*/
         //checking if cell eye sees wall
         for(CellEye e: cellEyes){
-            if((e.getX()<=0)||(e.getX()>=(gameArena.getPrefWidth()-10))||(e.getY()<=0)||(e.getY()>=(gameArena.getPrefHeight()-10))){
+            if((e.getX()<0)||(e.getX()>(gameArena.getPrefWidth()-10))||(e.getY()<0)||(e.getY()>(gameArena.getPrefHeight()-10))){
                 e.setEyeSees('w');
             }else{
                 e.setEyeSees('n');
@@ -192,7 +198,7 @@ public class CellLife extends GameObject{
         //action
         switch (faceDirection){
             case 'n':
-                if(y==0){
+                if(y<=0){
                     y=0;
                     hitWall=true;
                 }else{
@@ -200,7 +206,7 @@ public class CellLife extends GameObject{
                 }
                 break;
             case 'w':
-                if(x==(gameArena.getPrefWidth()-10)){
+                if(x>=(gameArena.getPrefWidth()-10)){
                     x=(gameArena.getPrefWidth()-10);
                     hitWall=true;
                 }else{
@@ -208,7 +214,7 @@ public class CellLife extends GameObject{
                 }
                 break;
             case 's':
-                if(y==(gameArena.getPrefHeight()-10)){
+                if(y>=(gameArena.getPrefHeight()-10)){
                     y=(gameArena.getPrefHeight()-10);
                     hitWall=true;
                 }else{
@@ -216,7 +222,7 @@ public class CellLife extends GameObject{
                 }
                 break;
             case 'e':
-                if(x==0){
+                if(x<=0){
                     x=0;
                     hitWall=true;
                 }else{
@@ -300,12 +306,12 @@ public class CellLife extends GameObject{
                     if(g.getTypeO() == 'f'){
                         //cell eats food and gets fat
                         g.setIsDead(true);
-                        setCellFat(getCellFat()+50);
+                        setCellFat(getCellFat() + foodCalories);
                     }
                     if(g.getTypeO() == 'p'){
                         //cell eats poison and dies
                         //setIsDead(true);
-                        setCellFat(getCellFat()-50);
+                        setCellFat(getCellFat() - poisonEffect);
                     }
                 }
             }

@@ -49,22 +49,22 @@ public class Brain {
         for(int i=0; i<cellEyes.size();i++){
             switch (cellEyes.get(i).getEyeSees()){
                 case 'p':
-                    cellSeesInDigits[i]=0.50f;
+                    cellSeesInDigits[i]=10f;
                     break;
                 case 'w':
-                    cellSeesInDigits[i]=1.22f;
+                    cellSeesInDigits[i]=20f;
                     break;
                 case 's':
-                    cellSeesInDigits[i]=1.33f;
+                    cellSeesInDigits[i]=30f;
                     break;
                 case 'c':
-                    cellSeesInDigits[i]=1.44f;
+                    cellSeesInDigits[i]=40f;
                     break;
                 case 'f':
-                    cellSeesInDigits[i]=2.00f;
+                    cellSeesInDigits[i]=50f;
                     break;
                 default:
-                    cellSeesInDigits[i]=0.00f;
+                    cellSeesInDigits[i]=0.01f;
                     break;
             }
             //System.out.print(cellEyes.get(i).getEyeSees()+" ");
@@ -129,6 +129,7 @@ public class Brain {
                 float product=cellSeesInDigits[k]*nW.get(i)[k];
                 resultList[i]=resultList[i]+product;
             }
+            //System.out.println(resultList[i]+" result1 for decision ");
         }
     }
     private void calculation2(){
@@ -138,7 +139,7 @@ public class Brain {
                 float product=resultList[k]*nDW.get(i)[k];
                 resultsForDecision[i]=resultsForDecision[i]+product;
             }
-            //System.out.print(resultsForDecision[i]+" ");
+            //System.out.println(resultsForDecision[i]+" result2 for decision ");
         }
     }
     public char cellThinking(){

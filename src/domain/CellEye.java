@@ -1,6 +1,8 @@
 package domain;
 
-public class CellEye {
+import javafx.scene.paint.Color;
+
+public class CellEye extends GameObject {
     //cell eye can see followings:
     //1. n for nothing
     //2. w for wall
@@ -17,6 +19,10 @@ public class CellEye {
     public CellEye(double x, double y){
         this.x= x;
         this.y= y;
+        super.getShapeR().setArcHeight(3.0);
+        super.getShapeR().setArcWidth(3);
+        super.getShapeR().setFill(Color.color(0.5,0.5,0.0));
+        super.setTypeO('p');
     }
     public void setEyeSees(char eyeSees){
         this.eyeSees=eyeSees;

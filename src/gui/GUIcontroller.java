@@ -5,6 +5,8 @@ import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -12,12 +14,15 @@ import java.util.stream.Collectors;
 public class GUIcontroller<i> {
     private Boolean start = true;
     private int cellPopulation=20;
-    private int foodAmount=100;
-    private int poisonAmount=50;
-    private int stones=40;
+    private int foodAmount=50;
+    private int poisonAmount=10;
+    private int stones=10;
     private int generation=0;
     @FXML
     private Pane gameArena = new Pane();
+
+    @FXML
+    private Pane cellZeroSees= new Pane();
 
     @FXML
     private Button startButton = new Button();
@@ -25,6 +30,7 @@ public class GUIcontroller<i> {
     private List<GameObject> allGameObjects= new ArrayList<>();
     private List<CellLife> allCells= new ArrayList<>();
     private List<CellLife> allDeadCells= new ArrayList<>();
+    private CellLife blueCell= new CellLife(40,40);
 
     //what cell sees and does
     private void cellsLiving(){
@@ -51,6 +57,26 @@ public class GUIcontroller<i> {
                         if(e.getCellFat()<=0){
                             e.setIsDead(true);
                         }
+
+                        boolean match=false;
+                        boolean matchCellList=true;
+                        int x= ((int) (Math.random()*gameArena.getPrefWidth()/10))*10;
+                        int y= ((int) (Math.random()*gameArena.getPrefHeight()/10))*10;
+
+                        for(GameObject q: allGameObjects){
+                            if((q.getShapeR().getX() == x)&&(q.getShapeR().getY() == y)){
+                                match=true;
+                            }
+                        }
+                        for(CellLife p: allCells){
+                            if((p.getShapeR().getX() == x)&&(p.getShapeR().getY() == y)){
+                                matchCellList=true;
+                            }
+                        }
+                        if((!match)&&(!matchCellList)){
+                                allGameObjects.add(new Food(x,y));
+                        }
+
                         break;
                     case 'l':
                         e.cellTurnLeft();
@@ -66,6 +92,8 @@ public class GUIcontroller<i> {
                             e.setIsDead(true);
                         }
                         break;
+                    default:
+                        System.out.println("Doing default");
                 }
                 /*System.out.print(e.cellsThinkAndAct() + " llllll " + e.getCellFat()+" ");
                 for(int p=0;p<e.getCellEyes().size();p++){
@@ -182,7 +210,9 @@ public class GUIcontroller<i> {
             System.out.println("this is max "+max);
         }
         generation++;
-        System.out.println("current generation: "+ generation);
+        allCells.get(0).getShapeR().setFill(Color.color(0,0.5,1));
+
+        System.out.println("generation: "+ generation);
         for(GameObject e: allGameObjects){
             gameArena.getChildren().add(e.getShapeR());
         }
@@ -213,9 +243,76 @@ public class GUIcontroller<i> {
             startingContent();
         }else{
             gameArena.getChildren().remove(0,gameArena.getChildren().size());
+            //cellZeroSees.getChildren().remove(0,gameArena.getChildren().size());
             createContent();
+
         }
     }
+    //what cell sees
+    private void cellZSees(){
+        blueCell.getCellEyes().get(0).setEyeSees(allCells.get(0).getCellEyes().get(0).getEyeSees());
+        blueCell.getCellEyes().get(1).setEyeSees(allCells.get(0).getCellEyes().get(1).getEyeSees());
+        blueCell.getCellEyes().get(2).setEyeSees(allCells.get(0).getCellEyes().get(2).getEyeSees());
+        blueCell.getCellEyes().get(3).setEyeSees(allCells.get(0).getCellEyes().get(3).getEyeSees());
+        blueCell.getCellEyes().get(4).setEyeSees(allCells.get(0).getCellEyes().get(4).getEyeSees());
+        blueCell.getCellEyes().get(5).setEyeSees(allCells.get(0).getCellEyes().get(5).getEyeSees());
+        blueCell.getCellEyes().get(6).setEyeSees(allCells.get(0).getCellEyes().get(6).getEyeSees());
+
+        for(CellEye e: blueCell.getCellEyes()){
+            switch (e.getEyeSees()){
+                case 'p':
+                    e.getShapeR().setFill(Color.color(0.5,0.5,0.0));
+                    break;
+                case 'w':
+                    e.getShapeR().setFill(Color.color(0.5,0.5,0.5));
+                    break;
+                case 's':
+                    e.getShapeR().setFill(Color.color(0.3,0.3,0.3));
+                    break;
+                case 'c':
+                    e.getShapeR().setFill(Color.color(0.3,0.7,0.0));
+                    break;
+                case 'f':
+                    e.getShapeR().setFill(Color.color(0.8,0.5,0.0));
+                    break;
+                default:
+                    e.getShapeR().setFill(Color.color(0.7,0.7,0.7));
+                    break;
+            }
+
+        }
+        blueCell.getCellEyes().get(0).getShapeR().setX(40);
+        blueCell.getCellEyes().get(0).getShapeR().setY(30);
+
+        blueCell.getCellEyes().get(1).getShapeR().setX(40);
+        blueCell.getCellEyes().get(1).getShapeR().setY(20);
+
+        blueCell.getCellEyes().get(2).getShapeR().setX(30);
+        blueCell.getCellEyes().get(2).getShapeR().setY(30);
+
+        blueCell.getCellEyes().get(3).getShapeR().setX(50);
+        blueCell.getCellEyes().get(3).getShapeR().setY(30);
+
+        blueCell.getCellEyes().get(4).getShapeR().setX(30);
+        blueCell.getCellEyes().get(4).getShapeR().setY(40);
+
+        blueCell.getCellEyes().get(5).getShapeR().setX(50);
+        blueCell.getCellEyes().get(5).getShapeR().setY(40);
+
+        blueCell.getCellEyes().get(6).getShapeR().setX(40);
+        blueCell.getCellEyes().get(6).getShapeR().setY(50);
+
+        cellZeroSees.getChildren().add(blueCell.getShapeR());
+
+        cellZeroSees.getChildren().add(blueCell.getCellEyes().get(0).getShapeR());
+        cellZeroSees.getChildren().add(blueCell.getCellEyes().get(1).getShapeR());
+        cellZeroSees.getChildren().add(blueCell.getCellEyes().get(2).getShapeR());
+        cellZeroSees.getChildren().add(blueCell.getCellEyes().get(3).getShapeR());
+        cellZeroSees.getChildren().add(blueCell.getCellEyes().get(4).getShapeR());
+        cellZeroSees.getChildren().add(blueCell.getCellEyes().get(5).getShapeR());
+        cellZeroSees.getChildren().add(blueCell.getCellEyes().get(6).getShapeR());
+    }
+
     @FXML
     private void startButtonOnAction(){
         startButton.setDisable(true);
