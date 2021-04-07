@@ -6,8 +6,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,15 +48,10 @@ public class FileRepo {
         // nW ; value0 ; value1 ;value2; value3; value4; value5; value6
 
         String[] tokens = line.split(";");
-        float[] floatnW = new float[7];
+        float[] floatnW = new float[3];
         floatnW[0]=Float.parseFloat(tokens[1]);
         floatnW[1]=Float.parseFloat(tokens[2]);
         floatnW[2]=Float.parseFloat(tokens[3]);
-        floatnW[3]=Float.parseFloat(tokens[4]);
-        floatnW[4]=Float.parseFloat(tokens[5]);
-        floatnW[5]=Float.parseFloat(tokens[6]);
-        floatnW[6]=Float.parseFloat(tokens[7]);
-
         return floatnW;
     }
 
@@ -91,11 +84,11 @@ public class FileRepo {
 
         StringBuilder content = new StringBuilder();
         for (float[] f : nW) {
-            content.append("nW;"+f[0]+"; "+f[1]+"; "+f[2]+"; "+f[3]+"; "+f[4]+"; "+f[5]+"; "+f[6]+"; "+"\n");
+            content.append("nW;"+f[0]+"; "+f[1]+"; "+f[2]+"\n");
         }
 
         for (float[] f : nDW) {
-            content.append("nDW;"+f[0]+"; "+f[1]+"; "+f[2]+"; "+f[3]+"; "+f[4]+"; "+f[5]+"; "+f[6]+"; "+"\n");
+            content.append("nDW;"+f[0]+"; "+f[1]+"; "+f[2]+"; "+f[3]+"; "+f[4]+"; "+f[5]+"; "+f[6]+"\n");
         }
 
         try (BufferedWriter bw = Files.newBufferedWriter(Paths.get(fileName))) {

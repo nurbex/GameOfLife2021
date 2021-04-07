@@ -11,13 +11,13 @@ public class Brain {
         nWListCreation();
         nDWListCreation();
     }
-    //cell has 7 eye
+    //cell has 3 eye
     //0.eyeN 1.eyeNN 2.eyeNW 3.eyeNE 4.eyeW 5.eyeE 6.eyeS
     // cells eyes scheme, o for eyes, @ for cell it self, looking north(n)
+
     //     o
-    //   o o o
     //   o @ o
-    //     o
+
     //cell has to decide what to do according what it sees
     //cell eye can see followings:
     //1. p for poison
@@ -26,6 +26,13 @@ public class Brain {
     //4. s for stones
     //5. c for other cells
     //6. f for food
+    //      node
+    //      node    y
+    // o    node    y
+    // o    node    y
+    // o    node    y
+    //      node    y
+    //      node
     //cell brain has one hidden layer with 7 neurons
     // need 7 array list of weights for each 7 neuron
     // need 7 array list of weights for each 5 options of decision
@@ -44,7 +51,7 @@ public class Brain {
     private char decision='n';
     private FileRepo fileRepo=new FileRepo();
     //what cell sees in digits
-    private float[] cellSeesInDigits=new float[7];
+    private float[] cellSeesInDigits=new float[3];
     public void cellSeesToDigits(List<CellEye> cellEyes){
         for(int i=0; i<cellEyes.size();i++){
             switch (cellEyes.get(i).getEyeSees()){
@@ -69,7 +76,7 @@ public class Brain {
             }
             //System.out.print(cellEyes.get(i).getEyeSees()+" ");
         }
-       // System.out.print("----------");
+        //System.out.print("----------");
     }
     //weights from eyes to neurons
     private List<float[]> nW = new ArrayList<>();
@@ -82,7 +89,7 @@ public class Brain {
     private void nWListCreation(){
         if(fileRepo.getnW().isEmpty()){
             for(int i=0;i<7;i++){
-                nW.add(new float[7]);
+                nW.add(new float[3]);
                 for(int z=0;z<nW.get(i).length;z++){
                     //nW.get(i)[z]=(float)(Math.random()*5-Math.random()*5);
                     nW.get(i)[z]=(float)Math.random();
@@ -132,11 +139,6 @@ public class Brain {
                 resultList[i]=resultList[i]+product;
             }
             //System.out.println(resultList[i]+" result1 for decision ");
- /*           if(resultList[i]<0){
-                resultList[i]=0;
-            }else{
-                resultList[i]=1;
-            }*/
         }
     }
     private void calculation2(){

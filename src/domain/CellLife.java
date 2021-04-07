@@ -19,10 +19,6 @@ public class CellLife extends GameObject{
         cellEyes.add(new CellEye());
         cellEyes.add(new CellEye());
         cellEyes.add(new CellEye());
-        cellEyes.add(new CellEye());
-        cellEyes.add(new CellEye());
-        cellEyes.add(new CellEye());
-        cellEyes.add(new CellEye());
     }
     //creating cell properties
     private String cellID= UUID.randomUUID().toString();
@@ -48,9 +44,7 @@ public class CellLife extends GameObject{
     //0.eyeN 1.eyeNN 2.eyeNW 3.eyeNE 4.eyeW 5.eyeE 6.eyeS
     // cells eyes scheme, o for eyes, @ for cell it self, looking north(n)
     //     o
-    //   o o o
     //   o @ o
-    //     o
 
     //creating brain of cell
     private Brain brain=new Brain();
@@ -115,50 +109,29 @@ public class CellLife extends GameObject{
         switch (faceDirection){
             case 'n':
                 cellEyes.get(0).setXY(x,y-10);
-                cellEyes.get(1).setXY(x,y-20);
-                cellEyes.get(2).setXY(x-10,y-10);
-                cellEyes.get(3).setXY(x+10,y-10);
-                cellEyes.get(4).setXY(x-10,y);
-                cellEyes.get(5).setXY(x+10,y);
-                cellEyes.get(6).setXY(x,y+10);
+                cellEyes.get(1).setXY(x-10,y);
+                cellEyes.get(2).setXY(x+10,y);
                 //correct
                 break;
             case 'e':
                 cellEyes.get(0).setXY(x+10,y);
-                cellEyes.get(1).setXY(x+20,y);
-                cellEyes.get(2).setXY(x+10,y-10);
-                cellEyes.get(3).setXY(x+10,y+10);
-                cellEyes.get(4).setXY(x,y-10);
-                cellEyes.get(5).setXY(x,y+10);
-                cellEyes.get(6).setXY(x-10,y);
+                cellEyes.get(1).setXY(x,y-10);
+                cellEyes.get(2).setXY(x,y+10);
                 //correct
                 break;
             case 's':
                 cellEyes.get(0).setXY(x,y+10);
-                cellEyes.get(1).setXY(x,y+20);
-                cellEyes.get(2).setXY(x+10,y+10);
-                cellEyes.get(3).setXY(x-10,y+10);
-                cellEyes.get(4).setXY(x+10,y);
-                cellEyes.get(5).setXY(x-10,y);
-                cellEyes.get(6).setXY(x,y-10);
+                cellEyes.get(1).setXY(x+10,y);
+                cellEyes.get(2).setXY(x-10,y);
                 //correct
                 break;
             case 'w':
                 cellEyes.get(0).setXY(x-10,y);
-                cellEyes.get(1).setXY(x-20,y);
-                cellEyes.get(2).setXY(x-10,y+10);
-                cellEyes.get(3).setXY(x-10,y-10);
-                cellEyes.get(4).setXY(x,y+10);
-                cellEyes.get(5).setXY(x,y-10);
-                cellEyes.get(6).setXY(x+10,y);
-
+                cellEyes.get(1).setXY(x,y+10);
+                cellEyes.get(2).setXY(x,y-10);
                 break;
         }
 
-        //giving default values
-        /*for(CellEye e: cellEyes){
-            e.setEyeSees('n');
-        }*/
         //checking if cell eye sees wall
         for(CellEye e: cellEyes){
             if((e.getX()<0)||(e.getX()>(gameArena.getPrefWidth()-10))||(e.getY()<0)||(e.getY()>(gameArena.getPrefHeight()-10))){
@@ -249,9 +222,7 @@ public class CellLife extends GameObject{
         if(!match){
             super.getShapeR().setX(x);
             super.getShapeR().setY(y);
-            if(getCellFat()>=0) {
-                setCellFat(getCellFat()-1);
-            }else{
+            if(getCellFat()<0) {
                 setIsDead(true);
             }
         }
@@ -467,27 +438,6 @@ public class CellLife extends GameObject{
     public char cellsThinkAndAct(){
         brain.cellSeesToDigits(cellEyes);
         decision= brain.cellThinking();
-/*        switch (decision){
-            case 'n':
-                cellFat--;
-                break;
-            case 'm':
-                cellMoves();
-                cellFat--;
-                break;
-            case 'e':
-                cellEats();
-                cellFat--;
-                break;
-            case 'l':
-                cellTurnLeft();
-                cellFat--;
-                break;
-            case 'r':
-                cellFat--;
-                cellTurnRight();
-                break;
-        }*/
         return decision;
     }
 
