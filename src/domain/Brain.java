@@ -139,6 +139,9 @@ public class Brain {
                 resultList[i]=resultList[i]+product;
             }
             //System.out.println(resultList[i]+" result1 for decision ");
+            if (resultList[i]<0) {
+                resultList[i]=0;
+            }
         }
     }
     private void calculation2(){
@@ -198,10 +201,10 @@ public class Brain {
         int c=(int)(Math.random()*nW.get(0).length);
         if(Math.random()>0.5){
             nW.get(r)[c]=nW.get(r)[c] - 0.01f;
-            System.out.print("nW- "+r+" "+c+" ");
+           //System.out.print("nW- "+r+" "+c+" ");
         }else{
             nW.get(r)[c]=nW.get(r)[c] + 0.01f;
-            System.out.print("nW+ "+r+" "+c+" ");
+            //System.out.print("nW+ "+r+" "+c+" ");
         }
     }
     public void randomMutationNDW(){
@@ -209,10 +212,10 @@ public class Brain {
         int c=(int)(Math.random()*nDW.get(0).length);
         if(Math.random()>0.5){
             nDW.get(r)[c]=nDW.get(r)[c] - 0.01f;
-            System.out.print("nDW- "+r+" "+c+" ");
+            //System.out.print("nDW- "+r+" "+c+" ");
         }else{
             nDW.get(r)[c]=nDW.get(r)[c] + 0.01f;
-            System.out.print("nDW+ "+r+" "+c+" ");
+            //System.out.print("nDW+ "+r+" "+c+" ");
         }
     }
 }

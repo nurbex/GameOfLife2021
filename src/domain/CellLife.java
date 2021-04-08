@@ -24,23 +24,14 @@ public class CellLife extends GameObject{
     private String cellID= UUID.randomUUID().toString();
     private int cellGeneration;
     private int lifeTime=0;
-    private int cellFat =100;
-    private int foodCalories =10;
-    private int poisonEffect=5;
+    private int cellFat =300;
+    private int foodCalories =50;
+    private int poisonEffect=25;
+    private int stoneEffect=1;
     private char isLooking = 'n';
     //getting data from GUI controller
     private boolean hitWall=false;
     private List<CellEye> cellEyes=new ArrayList<>();
-    private void addEyes(){
-        cellEyes.add(new CellEye());
-        cellEyes.add(new CellEye());
-        cellEyes.add(new CellEye());
-        cellEyes.add(new CellEye());
-        cellEyes.add(new CellEye());
-        cellEyes.add(new CellEye());
-        cellEyes.add(new CellEye());
-    }
-
     //0.eyeN 1.eyeNN 2.eyeNW 3.eyeNE 4.eyeW 5.eyeE 6.eyeS
     // cells eyes scheme, o for eyes, @ for cell it self, looking north(n)
     //     o
@@ -163,13 +154,12 @@ public class CellLife extends GameObject{
 
     public void cellMoves(List<GameObject> allGameObjects, List<CellLife> allCells, Pane gameArena){
         //data set
-        char faceDirection=getIsLooking();
         double x = super.getShapeR().getX();
         double y = super.getShapeR().getY();
         boolean hitWall=false;
         boolean match=false;
         //action
-        switch (faceDirection){
+        switch (isLooking){
             case 'n':
                 if(y<=0){
                     y=0;
@@ -178,7 +168,7 @@ public class CellLife extends GameObject{
                     y=y-10;
                 }
                 break;
-            case 'w':
+            case 'e':
                 if(x>=(gameArena.getPrefWidth()-10)){
                     x=(gameArena.getPrefWidth()-10);
                     hitWall=true;
@@ -194,7 +184,7 @@ public class CellLife extends GameObject{
                     y=y+10;
                 }
                 break;
-            case 'e':
+            case 'w':
                 if(x<=0){
                     x=0;
                     hitWall=true;
@@ -222,72 +212,58 @@ public class CellLife extends GameObject{
         if(!match){
             super.getShapeR().setX(x);
             super.getShapeR().setY(y);
-            if(getCellFat()<0) {
+            /*if(getCellFat()<0) {
                 setIsDead(true);
-            }
+            }*/
         }
     }
 
     public void cellEats(List<GameObject> allGameObjects, List<CellLife> allCells, Pane gameArena){
         //data set
-        char faceDirection=getIsLooking();
+
         double x = super.getShapeR().getX();
         double y = super.getShapeR().getY();
         boolean hitWall=false;
         boolean match=false;
         //action
-        switch (faceDirection){
+        switch (isLooking){
             case 'n':
-                if(y==0){
-                    y=0;
-                    hitWall=true;
-                }else{
                     y=y-10;
-                }
-                break;
-            case 'w':
-                if(x==(gameArena.getPrefWidth()-10)){
-                    x=(gameArena.getPrefWidth()-10);
-                    hitWall=true;
-                }else{
-                    x=x+10;
-                }
-                break;
-            case 's':
-                if(y==(gameArena.getPrefHeight()-10)){
-                    y=(gameArena.getPrefHeight()-10);
-                    hitWall=true;
-                }else{
-                    y=y+10;
-                }
                 break;
             case 'e':
-                if(x==0){
-                    x=0;
-                    hitWall=true;
-                }else{
+                    x=x+10;
+                break;
+            case 's':
+                    y=y+10;
+                break;
+            case 'w':
                     x=x-10;
-                }
                 break;
         }
         //if cell hits no wall, it checks for other gameObjects or other cells
-        if(!hitWall){
-            for(GameObject g: allGameObjects){
-                if((x == g.getShapeR().getX())&&(y == g.getShapeR().getY())){
-                    if(g.getTypeO() == 'f'){
-                        //cell eats food and gets fat
-                        g.setIsDead(true);
-                        setCellFat(getCellFat() + foodCalories);
-                    }
-                    if(g.getTypeO() == 'p'){
-                        //cell eats poison and dies
-                        //setIsDead(true);
-                        g.setIsDead(true);
-                        setCellFat(getCellFat() - poisonEffect);
-                    }
+
+        for(GameObject g: allGameObjects){
+            if((x == g.getShapeR().getX())&&(y == g.getShapeR().getY())){
+                if(g.getTypeO() == 'f'){
+                    //cell eats food and gets fat
+                    cellEyes.get(0).setEyeSees('n');
+                    g.setIsDead(true);
+                    setCellFat(getCellFat() + foodCalories);
+                }
+                if(g.getTypeO() == 'p'){
+                    //cell eats poison and dies
+                    setIsDead(true);
+                    //g.setIsDead(true);
+                    setCellFat(getCellFat() - poisonEffect);
+                }
+                if(g.getTypeO() == 's'){
+                    //cell eats poison and dies
+                    //setIsDead(true);
+                    setCellFat(getCellFat() - stoneEffect);
                 }
             }
         }
+
         //removes all dead gameObjects
         allGameObjects.removeIf(GameObject::getIsDead);
     }

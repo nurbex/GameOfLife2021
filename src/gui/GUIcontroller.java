@@ -4,8 +4,10 @@ import domain.*;
 import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,16 +15,19 @@ import java.util.stream.Collectors;
 
 public class GUIcontroller<i> {
     private Boolean start = true;
-    private int cellPopulation=20;
-    private int foodAmount=30;
-    private int poisonAmount=5;
-    private int stones=5;
+    private int cellPopulation=40;
+    private int foodAmount=160;
+    private int poisonAmount=15;
+    private int stones=15;
     private int generation=0;
+    private int maxLifeTime=400;
     @FXML
     private Pane gameArena = new Pane();
 
     @FXML
     private Pane cellZeroSees= new Pane();
+    @FXML
+    private Label cellDo=new Label();
 
     @FXML
     private Button startButton = new Button();
@@ -32,9 +37,20 @@ public class GUIcontroller<i> {
     private List<CellLife> allDeadCells= new ArrayList<>();
     private CellLife blueCell= new CellLife(40,40);
 
+    //eyes of cell zero
+    private Rectangle nEye= new Rectangle(10,10);
+    private Rectangle eEye= new Rectangle(10,10);
+    private Rectangle wEye= new Rectangle(10,10);
+    private Rectangle blueCellRectangle= new Rectangle(10,10);
+    char nEyeSees;
+    char eEyeSees;
+    char wEyeSees;
+
     //what cell sees and does
     private void cellsLiving(){
         if(!(allCells.isEmpty())){
+            allCells.get(0).getShapeR().setFill(Color.color(0,0.5,1));
+            cellZSees();
             for(CellLife e: allCells){
                 e.cellSees(allGameObjects, allCells, gameArena);
                 switch (e.cellsThinkAndAct()){
@@ -57,7 +73,7 @@ public class GUIcontroller<i> {
                         if(e.getCellFat()<=0){
                             e.setIsDead(true);
                         }
-
+                        allGameObjects.removeIf(GameObject::getIsDead);
                         boolean match=false;
                         boolean matchCellList=true;
                         int x= ((int) (Math.random()*gameArena.getPrefWidth()/10))*10;
@@ -103,10 +119,15 @@ public class GUIcontroller<i> {
                 e.setLifeTime(e.getLifeTime()+1);
                 //System.out.println("this is each cell lifetime"+e.getLifeTime());
             }
+
             allDeadCells=allCells.stream().filter(CellLife::getIsDead).collect(Collectors.toList());
             //System.out.println(" Dead Cell size"+allDeadCells.size());
             allCells.removeIf(CellLife::getIsDead);
         }
+
+        /*if(!allCells.isEmpty()){
+            System.out.println(" what cell zero sees "+allCells.get(0).getCellEyes().get(0).getEyeSees()+" "+allCells.get(0).getCellEyes().get(1).getEyeSees()+" "+allCells.get(0).getCellEyes().get(2).getEyeSees()+" ");
+        }*/
     }
 
     private void startingContent(){
@@ -197,28 +218,45 @@ public class GUIcontroller<i> {
                     theLastHero=w;
                 }
             }
-            theLastHero.cellBrainToFile();
-            allDeadCells.clear();
-            for(int t=0;t<(cellPopulation/2);t++){
-                allCells.get(t).getCellBrain().setnW(theLastHero.getCellBrain().getnW());
-                allCells.get(t).getCellBrain().setnDW(theLastHero.getCellBrain().getnDW());
+            if(maxLifeTime<max){
+                maxLifeTime=max;
+                theLastHero.cellBrainToFile();
+                System.out.println("-----------------------------------weights are recorded----------------------------------");
+                System.out.println("this is max "+max);
+                System.out.println("generation: "+ generation);
+                for(int t=0;t<(cellPopulation/2);t++){
+                    allCells.get(t).getCellBrain().setnW(theLastHero.getCellBrain().getnW());
+                    allCells.get(t).getCellBrain().setnDW(theLastHero.getCellBrain().getnDW());
+                }
+
             }
             theLastHero.cellMutates();
             for(int t=cellPopulation/2;t<cellPopulation;t++){
                 allCells.get(t).getCellBrain().setnW(theLastHero.getCellBrain().getnW());
                 allCells.get(t).getCellBrain().setnDW(theLastHero.getCellBrain().getnDW());
             }
-            System.out.println("this is max "+max);
+            /*allCells.get(0).cellMutates();
+            for(int t=cellPopulation-6;t<cellPopulation;t++){
+                allCells.get(t).getCellBrain().setnW(allCells.get(0).getCellBrain().getnW());
+                allCells.get(t).getCellBrain().setnDW(allCells.get(0).getCellBrain().getnDW());
+            }*/
+
+            allDeadCells.clear();
+
+            //System.out.println("this is max "+max);
         }
         generation++;
-        allCells.get(0).getShapeR().setFill(Color.color(0,0.5,1));
-
-        System.out.println("generation: "+ generation);
+        maxLifeTime--;
+        //System.out.println("generation: "+ generation);
         for(GameObject e: allGameObjects){
             gameArena.getChildren().add(e.getShapeR());
         }
         for(CellLife e: allCells){
             gameArena.getChildren().add(e.getShapeR());
+        }
+        if(!allCells.isEmpty()){
+            allCells.get(0).getShapeR().setFill(Color.color(0,0.5,1));
+            cellZSees();
         }
         start=false;
     }
@@ -242,76 +280,154 @@ public class GUIcontroller<i> {
         if(allCells.isEmpty()){
             removeContent();
             startingContent();
+            //cellZeroSees.getChildren().remove(0,gameArena.getChildren().size());
         }else{
             gameArena.getChildren().remove(0,gameArena.getChildren().size());
             //cellZeroSees.getChildren().remove(0,gameArena.getChildren().size());
             createContent();
-
         }
     }
     //what cell sees
     private void cellZSees(){
-        blueCell.getCellEyes().get(0).setEyeSees(allCells.get(0).getCellEyes().get(0).getEyeSees());
-        blueCell.getCellEyes().get(1).setEyeSees(allCells.get(0).getCellEyes().get(1).getEyeSees());
-        blueCell.getCellEyes().get(2).setEyeSees(allCells.get(0).getCellEyes().get(2).getEyeSees());
-        blueCell.getCellEyes().get(3).setEyeSees(allCells.get(0).getCellEyes().get(3).getEyeSees());
-        blueCell.getCellEyes().get(4).setEyeSees(allCells.get(0).getCellEyes().get(4).getEyeSees());
-        blueCell.getCellEyes().get(5).setEyeSees(allCells.get(0).getCellEyes().get(5).getEyeSees());
-        blueCell.getCellEyes().get(6).setEyeSees(allCells.get(0).getCellEyes().get(6).getEyeSees());
-
-        for(CellEye e: blueCell.getCellEyes()){
-            switch (e.getEyeSees()){
-                case 'p':
-                    e.getShapeR().setFill(Color.color(0.5,0.5,0.0));
-                    break;
-                case 'w':
-                    e.getShapeR().setFill(Color.color(0.5,0.5,0.5));
-                    break;
-                case 's':
-                    e.getShapeR().setFill(Color.color(0.3,0.3,0.3));
-                    break;
-                case 'c':
-                    e.getShapeR().setFill(Color.color(0.3,0.7,0.0));
-                    break;
-                case 'f':
-                    e.getShapeR().setFill(Color.color(0.8,0.5,0.0));
-                    break;
-                default:
-                    e.getShapeR().setFill(Color.color(0.7,0.7,0.7));
-                    break;
-            }
-
+        if(!cellZeroSees.getChildren().isEmpty()){
+            cellZeroSees.getChildren().remove(0,cellZeroSees.getChildren().size());
         }
-        blueCell.getCellEyes().get(0).getShapeR().setX(40);
-        blueCell.getCellEyes().get(0).getShapeR().setY(30);
+        cellDo.setText(allCells.get(0).getCellBrain().cellThinking()+"\n"+allCells.get(0).getIsLooking()+"\n");
 
-        blueCell.getCellEyes().get(1).getShapeR().setX(40);
-        blueCell.getCellEyes().get(1).getShapeR().setY(20);
+        nEyeSees= allCells.get(0).getCellEyes().get(0).getEyeSees();
+        wEyeSees=allCells.get(0).getCellEyes().get(1).getEyeSees();
+        eEyeSees=allCells.get(0).getCellEyes().get(2).getEyeSees();
 
-        blueCell.getCellEyes().get(2).getShapeR().setX(30);
-        blueCell.getCellEyes().get(2).getShapeR().setY(30);
+        switch (nEyeSees){
+            case 'p':
+                nEye.setFill(Color.color(0.5,0.5,0.0));
+                break;
+            case 'w':
+                nEye.setFill(Color.color(0.7,0.0,0.7));
+                break;
+            case 's':
+                nEye.setFill(Color.color(0.3,0.3,0.3));
+                break;
+            case 'c':
+                nEye.setFill(Color.color(0.3,0.7,0.0));
+                break;
+            case 'f':
+                nEye.setFill(Color.color(0.8,0.5,0.0));
+                break;
+            default:
+                nEye.setFill(Color.color(0.6,0.6,0.6));
+                break;
+            }
+        switch (eEyeSees){
+            case 'p':
+                eEye.setFill(Color.color(0.5,0.5,0.0));
+                break;
+            case 'w':
+                eEye.setFill(Color.color(0.7,0.0,0.7));
+                break;
+            case 's':
+                eEye.setFill(Color.color(0.3,0.3,0.3));
+                break;
+            case 'c':
+                eEye.setFill(Color.color(0.3,0.7,0.0));
+                break;
+            case 'f':
+                eEye.setFill(Color.color(0.8,0.5,0.0));
+                break;
+            default:
+                eEye.setFill(Color.color(0.6,0.6,0.6));
+                break;
+        }
+        switch (wEyeSees){
+            case 'p':
+                wEye.setFill(Color.color(0.5,0.5,0.0));
+                break;
+            case 'w':
+                wEye.setFill(Color.color(0.7,0.0,0.7));
+                break;
+            case 's':
+                wEye.setFill(Color.color(0.3,0.3,0.3));
+                break;
+            case 'c':
+                wEye.setFill(Color.color(0.3,0.7,0.0));
+                break;
+            case 'f':
+                wEye.setFill(Color.color(0.8,0.5,0.0));
+                break;
+            default:
+                wEye.setFill(Color.color(0.6,0.6,0.6));
+                break;
+        }
 
-        blueCell.getCellEyes().get(3).getShapeR().setX(50);
-        blueCell.getCellEyes().get(3).getShapeR().setY(30);
+        int x=20;
+        int y=20;
+        blueCellRectangle.setFill(Color.color(0,0.5,1));
+        blueCellRectangle.setX(x);
+        blueCellRectangle.setY(y);
+        nEye.setX(40);
+        nEye.setY(30);
 
-        blueCell.getCellEyes().get(4).getShapeR().setX(30);
-        blueCell.getCellEyes().get(4).getShapeR().setY(40);
+        wEye.setX(30);
+        wEye.setY(40);
 
-        blueCell.getCellEyes().get(5).getShapeR().setX(50);
-        blueCell.getCellEyes().get(5).getShapeR().setY(40);
+        eEye.setX(50);
+        eEye.setY(40);
 
-        blueCell.getCellEyes().get(6).getShapeR().setX(40);
-        blueCell.getCellEyes().get(6).getShapeR().setY(50);
+        switch (allCells.get(0).getIsLooking()){
+            case 'n':
 
-        cellZeroSees.getChildren().add(blueCell.getShapeR());
+                nEye.setX(x);
+                nEye.setY(y-10);
 
-        cellZeroSees.getChildren().add(blueCell.getCellEyes().get(0).getShapeR());
-        cellZeroSees.getChildren().add(blueCell.getCellEyes().get(1).getShapeR());
-        cellZeroSees.getChildren().add(blueCell.getCellEyes().get(2).getShapeR());
-        cellZeroSees.getChildren().add(blueCell.getCellEyes().get(3).getShapeR());
-        cellZeroSees.getChildren().add(blueCell.getCellEyes().get(4).getShapeR());
-        cellZeroSees.getChildren().add(blueCell.getCellEyes().get(5).getShapeR());
-        cellZeroSees.getChildren().add(blueCell.getCellEyes().get(6).getShapeR());
+                wEye.setX(x-10);
+                wEye.setY(y);
+
+                eEye.setX(x+10);
+                eEye.setY(y);
+
+                break;
+            case 'e':
+
+                nEye.setX(x+10);
+                nEye.setY(y);
+
+                wEye.setX(x);
+                wEye.setY(y-10);
+
+                eEye.setX(x);
+                eEye.setY(y+10);
+
+                break;
+            case 's':
+
+                nEye.setX(x);
+                nEye.setY(y+10);
+
+                wEye.setX(x+10);
+                wEye.setY(y);
+
+                eEye.setX(x-10);
+                eEye.setY(y);
+
+                break;
+            case 'w':
+
+                nEye.setX(x-10);
+                nEye.setY(y);
+
+                wEye.setX(x);
+                wEye.setY(y+10);
+
+                eEye.setX(x);
+                eEye.setY(y-10);
+
+                break;
+        }
+
+        cellZeroSees.getChildren().add(nEye);
+        cellZeroSees.getChildren().add(eEye);
+        cellZeroSees.getChildren().add(wEye);
+        cellZeroSees.getChildren().add(blueCellRectangle);
     }
 
     @FXML
