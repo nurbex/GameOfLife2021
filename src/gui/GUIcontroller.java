@@ -3,24 +3,29 @@ package gui;
 import domain.*;
 import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
+import javafx.scene.chart.AreaChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 public class GUIcontroller<i> {
     private Boolean start = true;
-    private int cellPopulation=40;
+    private int cellPopulation=20;
     private int foodAmount=160;
     private int poisonAmount=15;
     private int stones=15;
     private int generation=0;
-    private int maxLifeTime=400;
+    private int maxLifeTime=200;
     @FXML
     private Pane gameArena = new Pane();
 
@@ -28,6 +33,17 @@ public class GUIcontroller<i> {
     private Pane cellZeroSees= new Pane();
     @FXML
     private Label cellDo=new Label();
+
+    @FXML
+    private NumberAxis generationOfCells= new NumberAxis();
+
+    @FXML
+    private NumberAxis maxLifeTotal= new NumberAxis();
+
+    @FXML
+    private AreaChart <Number, Number> generationChart = new AreaChart<Number, Number>(generationOfCells, maxLifeTotal);
+
+    private XYChart.Series<Number, Number> generationSeries = new XYChart.Series<Number, Number>();
 
     @FXML
     private Button startButton = new Button();
@@ -131,7 +147,9 @@ public class GUIcontroller<i> {
     }
 
     private void startingContent(){
-
+        if(start){
+            createChart();
+        }
         //creating stones
         int s = 0;
         while(s<stones){
@@ -224,6 +242,8 @@ public class GUIcontroller<i> {
                 System.out.println("-----------------------------------weights are recorded----------------------------------");
                 System.out.println("this is max "+max);
                 System.out.println("generation: "+ generation);
+                generationSeries.getData().add(new XYChart.Data<Number, Number>(generation,maxLifeTime));
+
                 for(int t=0;t<(cellPopulation/2);t++){
                     allCells.get(t).getCellBrain().setnW(theLastHero.getCellBrain().getnW());
                     allCells.get(t).getCellBrain().setnDW(theLastHero.getCellBrain().getnDW());
@@ -428,6 +448,13 @@ public class GUIcontroller<i> {
         cellZeroSees.getChildren().add(eEye);
         cellZeroSees.getChildren().add(wEye);
         cellZeroSees.getChildren().add(blueCellRectangle);
+    }
+
+    //create chart
+    private void createChart(){
+        generationSeries.setName("Survived cells");
+        generationChart.setCreateSymbols(false);
+        generationChart.getData().add(generationSeries);
     }
 
     @FXML
