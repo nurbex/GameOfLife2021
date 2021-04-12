@@ -25,7 +25,7 @@ public class GUIcontroller<i> {
     private int poisonAmount=15;
     private int stones=15;
     private int generation=0;
-    private int maxLifeTime=200;
+    private int maxLifeTime=100;
     @FXML
     private Pane gameArena = new Pane();
 
@@ -246,6 +246,7 @@ public class GUIcontroller<i> {
 
                 for(int t=0;t<(cellPopulation/2);t++){
                     allCells.get(t).getCellBrain().setnW(theLastHero.getCellBrain().getnW());
+                    allCells.get(t).getCellBrain().setnMW(theLastHero.getCellBrain().getnMW());
                     allCells.get(t).getCellBrain().setnDW(theLastHero.getCellBrain().getnDW());
                 }
 
@@ -253,11 +254,13 @@ public class GUIcontroller<i> {
             theLastHero.cellMutates();
             for(int t=cellPopulation/2;t<cellPopulation;t++){
                 allCells.get(t).getCellBrain().setnW(theLastHero.getCellBrain().getnW());
+                allCells.get(t).getCellBrain().setnMW(theLastHero.getCellBrain().getnMW());
                 allCells.get(t).getCellBrain().setnDW(theLastHero.getCellBrain().getnDW());
             }
             /*allCells.get(0).cellMutates();
             for(int t=cellPopulation-6;t<cellPopulation;t++){
                 allCells.get(t).getCellBrain().setnW(allCells.get(0).getCellBrain().getnW());
+                allCells.get(t).getCellBrain().setnMW(allCells.get(0).getCellBrain().getnMW());
                 allCells.get(t).getCellBrain().setnDW(allCells.get(0).getCellBrain().getnDW());
             }*/
 

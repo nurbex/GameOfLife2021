@@ -24,9 +24,9 @@ public class CellLife extends GameObject{
     private String cellID= UUID.randomUUID().toString();
     private int cellGeneration;
     private int lifeTime=0;
-    private int cellFat =50;
-    private int foodCalories =20;
-    private int poisonEffect=25;
+    private int cellFat =20;
+    private int foodCalories =10;
+    private int poisonEffect=10;
     private int stoneEffect=1;
     private char isLooking = 'n';
     //getting data from GUI controller
@@ -283,6 +283,7 @@ public class CellLife extends GameObject{
                 isLooking='s';
                 break;
         }
+        //System.out.println("left");
     }
 
     public void cellTurnRight(){
@@ -300,6 +301,7 @@ public class CellLife extends GameObject{
                 isLooking='n';
                 break;
         }
+        //System.out.println("right");
     }
 
     //what cell sees and does

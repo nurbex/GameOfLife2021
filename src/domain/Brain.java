@@ -3,12 +3,12 @@ package domain;
 import repo.FileRepo;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Brain {
     public Brain(){
         nWListCreation();
+        nMWListCreation();
         nDWListCreation();
     }
     //cell has 3 eye
@@ -26,13 +26,13 @@ public class Brain {
     //4. s for stones
     //5. c for other cells
     //6. f for food
-    //      node
-    //      node    y
-    // o    node    y
-    // o    node    y
-    // o    node    y
-    //      node    y
-    //      node
+    //      node node
+    //      node node   y
+    // o    node node   y
+    // o    node node   y
+    // o    node node   y
+    //      node node   y
+
     //cell brain has one hidden layer with 7 neurons
     // need 7 array list of weights for each 7 neuron
     // need 7 array list of weights for each 5 options of decision
@@ -59,16 +59,16 @@ public class Brain {
                     cellSeesInDigits[i]=10f;
                     break;
                 case 'w':
-                    cellSeesInDigits[i]=20f;
+                    cellSeesInDigits[i]=-20f;
                     break;
                 case 's':
-                    cellSeesInDigits[i]=30f;
-                    break;
-                case 'c':
                     cellSeesInDigits[i]=40f;
                     break;
+                case 'c':
+                    cellSeesInDigits[i]=70f;
+                    break;
                 case 'f':
-                    cellSeesInDigits[i]=50f;
+                    cellSeesInDigits[i]=100f;
                     break;
                 default:
                     cellSeesInDigits[i]=0.01f;
@@ -88,10 +88,10 @@ public class Brain {
     }
     private void nWListCreation(){
         if(fileRepo.getnW().isEmpty()){
-            for(int i=0;i<7;i++){
+            for(int i=0;i<6;i++){
                 nW.add(new float[3]);
                 for(int z=0;z<nW.get(i).length;z++){
-                    //nW.get(i)[z]=(float)(Math.random()*5-Math.random()*5);
+
                     nW.get(i)[z]=(float)Math.random();
                     //System.out.print(nW.get(i)[z]+" ");
                 }
@@ -101,8 +101,36 @@ public class Brain {
         }
 
     }
+    private float[] resultList1=new float[6];
+
+    // adding one more layer
+    //weights from neurons to decision
+    private List<float[]> nMW = new ArrayList<>();
+
+    public void setnMW(List<float[]> nMW){
+        this.nMW=nMW;
+    }
+    public List<float[]> getnMW(){
+        return nMW;
+    }
+
+    private void nMWListCreation(){
+        if(fileRepo.getnMW().isEmpty()){
+            for(int i=0;i<6;i++){
+                nMW.add(new float[6]);
+                for(int z=0;z<nMW.get(i).length;z++){
+                    //nMW.get(i)[z]=(float)(Math.random()*5-Math.random()*5);
+                    nMW.get(i)[z]=(float)Math.random();
+                    //System.out.print(nMW.get(i)[z]+" ");
+                }
+            }
+        }else{
+            nMW=fileRepo.getnMW();
+        }
+    }
+
     //results to feed 7 neurons
-    private float[] resultList=new float[7];
+    private float[] resultList2 =new float[6];
     //weights from neurons to decision
     private List<float[]> nDW = new ArrayList<>();
     public void setnDW(List<float[]> nDW){
@@ -114,7 +142,7 @@ public class Brain {
     private void nDWListCreation(){
         if(fileRepo.getnDW().isEmpty()){
             for(int i=0;i<5;i++){
-                nDW.add(new float[7]);
+                nDW.add(new float[6]);
                 for(int z=0;z<nDW.get(i).length;z++){
                     //nDW.get(i)[z]=(float)(Math.random()*5-Math.random()*5);
                     nDW.get(i)[z]=(float)Math.random();
@@ -124,38 +152,50 @@ public class Brain {
         }else{
             nDW=fileRepo.getnDW();
         }
-
-
     }
     //results to feed 5 decisions
     private float[] resultsForDecision=new float[5];
 
     //calculations
-    private void calculation1(){
-        for(int i=0;i<resultList.length; i++){
-            resultList[i]=0;
+
+    private void calculation1a(){
+        for(int i = 0; i< resultList1.length; i++){
+            resultList1[i]=0;
             for(int k=0; k<cellSeesInDigits.length; k++){
                 float product=cellSeesInDigits[k]*nW.get(i)[k];
-                resultList[i]=resultList[i]+product;
+                resultList1[i]= resultList1[i]+product;
             }
-            //System.out.println(resultList[i]+" result1 for decision ");
-            if (resultList[i]<0) {
-                resultList[i]=0;
+            //sigmoid function
+            resultList1[i]=(float) (1/( 1 + Math.pow(Math.E,(-1*resultList1[i]))));
+        }
+    }
+
+    private void calculation1b(){
+        for(int i = 0; i< resultList2.length; i++){
+            resultList2[i]=0;
+            for(int k=0; k<resultList1.length; k++){
+                float product=resultList1[k]*nMW.get(i)[k];
+                resultList2[i]= resultList2[i]+product;
+            }
+            //Ral.U
+            if (resultList2[i]<0) {
+                resultList2[i]=0;
             }
         }
     }
     private void calculation2(){
         for(int i=0; i<resultsForDecision.length; i++){
             resultsForDecision[i]=0;
-            for(int k=0; k<resultList.length; k++){
-                float product=resultList[k]*nDW.get(i)[k];
+            for(int k = 0; k< resultList2.length; k++){
+                float product= resultList2[k]*nDW.get(i)[k];
                 resultsForDecision[i]=resultsForDecision[i]+product;
             }
             //System.out.println(resultsForDecision[i]+" result2 for decision ");
         }
     }
     public char cellThinking(){
-        calculation1();
+        calculation1a();
+        calculation1b();
         calculation2();
         float max=0;
         int index=0;
@@ -186,24 +226,35 @@ public class Brain {
     }
 
     public void brainWRandom(){
-        if(Math.random()>0.5){
-            randomMutationNW();
-        }else{
-            randomMutationNDW();
+
+        switch ((int)(Math.random()*3)){
+            case 0:
+                randomMutationNW();
+                //System.out.println("nW");
+                break;
+            case 1:
+                randomMutationNMW();
+                //System.out.println("nMW");
+                break;
+            case 2:
+                randomMutationNDW();
+                //System.out.println("nDW");
+                break;
         }
+
     }
     public void brainWriteToFile(){
-        fileRepo.writeEverythingToFile(nW,nDW);
+        fileRepo.writeEverythingToFile(nW, nMW, nDW);
     }
 
     public void randomMutationNW(){
         int r=(int)(Math.random()*nW.size());
         int c=(int)(Math.random()*nW.get(0).length);
         if(Math.random()>0.5){
-            nW.get(r)[c]=nW.get(r)[c] - 0.01f;
-           //System.out.print("nW- "+r+" "+c+" ");
+            nW.get(r)[c]=nW.get(r)[c] - 0.1f;
+            //System.out.print("nW- "+r+" "+c+" ");
         }else{
-            nW.get(r)[c]=nW.get(r)[c] + 0.01f;
+            nW.get(r)[c]=nW.get(r)[c] + 0.1f;
             //System.out.print("nW+ "+r+" "+c+" ");
         }
     }
@@ -211,11 +262,23 @@ public class Brain {
         int r=(int)(Math.random()*nDW.size());
         int c=(int)(Math.random()*nDW.get(0).length);
         if(Math.random()>0.5){
-            nDW.get(r)[c]=nDW.get(r)[c] - 0.01f;
+            nDW.get(r)[c]=nDW.get(r)[c] - 0.1f;
             //System.out.print("nDW- "+r+" "+c+" ");
         }else{
-            nDW.get(r)[c]=nDW.get(r)[c] + 0.01f;
+            nDW.get(r)[c]=nDW.get(r)[c] + 0.1f;
             //System.out.print("nDW+ "+r+" "+c+" ");
+        }
+    }
+
+    public void randomMutationNMW(){
+        int r=(int)(Math.random()*nMW.size());
+        int c=(int)(Math.random()*nMW.get(0).length);
+        if(Math.random()>0.5){
+            nMW.get(r)[c]=nMW.get(r)[c] - 0.1f;
+            //System.out.print("nMW- "+r+" "+c+" ");
+        }else{
+            nMW.get(r)[c]=nMW.get(r)[c] + 0.1f;
+            //System.out.print("nMW+ "+r+" "+c+" ");
         }
     }
 }
