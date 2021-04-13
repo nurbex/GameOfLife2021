@@ -254,7 +254,7 @@ public class CellLife extends GameObject{
                     //cell eats poison and dies
                     setIsDead(true);
                     //g.setIsDead(true);
-                    setCellFat(getCellFat() - poisonEffect);
+                    //setCellFat(getCellFat() - poisonEffect);
                 }
                 if(g.getTypeO() == 's'){
                     //cell eats poison and dies
