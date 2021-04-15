@@ -13,6 +13,7 @@ public class FileRepo {
     String fileName;
 
     private List<float[]> nW = new ArrayList<>();
+    private List<float[]> nNW = new ArrayList<>();
     private List<float[]> nMW = new ArrayList<>();
     private List<float[]> nDW = new ArrayList<>();
 
@@ -31,6 +32,9 @@ public class FileRepo {
             while ((line = br.readLine()) != null) {
                 if (line.startsWith("nW")) {
                    nW.add(parsenW(line));
+                }
+                if (line.startsWith("nNW")) {
+                    nNW.add(parsenNW(line));
                 }
                 if (line.startsWith("nMW")) {
                     nMW.add(parsenMW(line));
@@ -89,6 +93,21 @@ public class FileRepo {
         return floatnMW;
     }
 
+    public float[] parsenNW(String line){
+        // nW ; value0 ; value1 ;value2; value3; value4; value5; value6
+
+        String[] tokens = line.split(";");
+        float[] floatnNW = new float[6];
+        floatnNW[0]=Float.parseFloat(tokens[1]);
+        floatnNW[1]=Float.parseFloat(tokens[2]);
+        floatnNW[2]=Float.parseFloat(tokens[3]);
+        floatnNW[3]=Float.parseFloat(tokens[4]);
+        floatnNW[4]=Float.parseFloat(tokens[5]);
+        floatnNW[5]=Float.parseFloat(tokens[6]);
+
+        return floatnNW;
+    }
+
 
     public List<float[]> getnW(){
         return nW;
@@ -99,15 +118,23 @@ public class FileRepo {
     public List<float[]> getnMW(){
         return nMW;
     }
+    public List<float[]> getnNW(){
+        return nNW;
+    }
 
-    public void writeEverythingToFile(List<float[]> nW, List<float[]>nMW, List<float[]>nDW){
+    public void writeEverythingToFile(List<float[]> nW,  List<float[]>nNW,List<float[]>nMW, List<float[]>nDW){
         this.nW=nW;
+        this.nNW=nNW;
         this.nMW=nMW;
         this.nDW=nDW;
 
         StringBuilder content = new StringBuilder();
         for (float[] f : nW) {
             content.append("nW;"+f[0]+"; "+f[1]+"; "+f[2]+"\n");
+        }
+
+        for (float[] f : nNW) {
+            content.append("nNW;"+f[0]+"; "+f[1]+"; "+f[2]+"; "+f[3]+"; "+f[4]+"; "+f[5]+"\n");
         }
 
         for (float[] f : nMW) {

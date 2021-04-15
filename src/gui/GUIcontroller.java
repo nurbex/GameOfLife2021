@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 public class GUIcontroller<i> {
     private Boolean start = true;
     private int cellPopulation=20;
-    private int foodAmount=160;
+    private int foodAmount=100;
     private int poisonAmount=15;
     private int stones=15;
     private int generation=0;
@@ -62,7 +62,7 @@ public class GUIcontroller<i> {
     char eEyeSees;
     char wEyeSees;
 
-    //what cell sees and does
+    //what cell sees and does 18004335778
     private void cellsLiving(){
         if(!(allCells.isEmpty())){
             allCells.get(0).getShapeR().setFill(Color.color(0,0.5,1));
@@ -88,28 +88,6 @@ public class GUIcontroller<i> {
                         e.setCellFat(e.getCellFat()-1);
                         if(e.getCellFat()<=0){
                             e.setIsDead(true);
-                            //adding new food
-                            boolean match=false;
-                            boolean matchCellList=false;
-                            int x= ((int) (Math.random()*gameArena.getPrefWidth()/10))*10;
-                            int y= ((int) (Math.random()*gameArena.getPrefHeight()/10))*10;
-
-                            for(GameObject q: allGameObjects){
-                                if((q.getShapeR().getX() == x)&&(q.getShapeR().getY() == y)){
-                                    match=true;
-                                }
-                            }
-                            for(CellLife p: allCells){
-                                if((p.getShapeR().getX() == x)&&(p.getShapeR().getY() == y)){
-                                    matchCellList=true;
-                                }
-                            }
-                            if((!match)&&(!matchCellList)){
-                                allGameObjects.add(new Food(x,y));
-                                match=false;
-                                matchCellList=false;
-                                //System.out.println("food added");
-                            }
                         }
                         allGameObjects.removeIf(GameObject::getIsDead);
                         break;
@@ -250,6 +228,7 @@ public class GUIcontroller<i> {
 
                 for(int t=0;t<(cellPopulation/2);t++){
                     allCells.get(t).getCellBrain().setnW(theLastHero.getCellBrain().getnW());
+                    allCells.get(t).getCellBrain().setnNW(theLastHero.getCellBrain().getnNW());
                     allCells.get(t).getCellBrain().setnMW(theLastHero.getCellBrain().getnMW());
                     allCells.get(t).getCellBrain().setnDW(theLastHero.getCellBrain().getnDW());
                 }
@@ -258,6 +237,7 @@ public class GUIcontroller<i> {
             theLastHero.cellMutates();
             for(int t=cellPopulation/2;t<cellPopulation;t++){
                 allCells.get(t).getCellBrain().setnW(theLastHero.getCellBrain().getnW());
+                allCells.get(t).getCellBrain().setnNW(theLastHero.getCellBrain().getnNW());
                 allCells.get(t).getCellBrain().setnMW(theLastHero.getCellBrain().getnMW());
                 allCells.get(t).getCellBrain().setnDW(theLastHero.getCellBrain().getnDW());
             }
@@ -288,8 +268,36 @@ public class GUIcontroller<i> {
         start=false;
     }
 
+    public void addingMissing(){
+        //adding new food
+        while(allGameObjects.stream().filter(e -> e.getTypeO() =='f').collect(Collectors.toList()).size()<foodAmount){
+            boolean match=false;
+            boolean matchCellList=false;
+            int x= ((int) (Math.random()*gameArena.getPrefWidth()/10))*10;
+            int y= ((int) (Math.random()*gameArena.getPrefHeight()/10))*10;
+
+            for(GameObject q: allGameObjects){
+                if((q.getShapeR().getX() == x)&&(q.getShapeR().getY() == y)){
+                    match=true;
+                }
+            }
+            for(CellLife p: allCells){
+                if((p.getShapeR().getX() == x)&&(p.getShapeR().getY() == y)){
+                    matchCellList=true;
+                }
+            }
+            if((!match)&&(!matchCellList)){
+                allGameObjects.add(new Food(x,y));
+                match=false;
+                matchCellList=false;
+                //System.out.println("food added");
+            }
+        }
+    }
+
     private void createContent(){
         cellsLiving();
+        addingMissing();
         for(GameObject e: allGameObjects){
             gameArena.getChildren().add(e.getShapeR());
         }

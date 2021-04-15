@@ -8,6 +8,7 @@ import java.util.List;
 public class Brain {
     public Brain(){
         nWListCreation();
+        nNWListCreation();
         nMWListCreation();
         nDWListCreation();
     }
@@ -26,12 +27,12 @@ public class Brain {
     //4. s for stones
     //5. c for other cells
     //6. f for food
-    //      node node
-    //      node node   y
-    // o    node node   y
-    // o    node node   y
-    // o    node node   y
-    //      node node   y
+    //      node node node
+    //      node node node  y
+    // o    node node node  y
+    // o    node node node  y
+    // o    node node node  y
+    //      node node node  y
 
     //cell brain has one hidden layer with 7 neurons
     // need 7 array list of weights for each 7 neuron
@@ -104,7 +105,34 @@ public class Brain {
     private float[] resultList1=new float[6];
 
     // adding one more layer
-    //weights from neurons to decision
+
+    private List<float[]> nNW = new ArrayList<>();
+
+    public void setnNW(List<float[]> nNW){
+        this.nNW=nNW;
+    }
+    public List<float[]> getnNW(){
+        return nNW;
+    }
+
+    private void nNWListCreation(){
+        if(fileRepo.getnNW().isEmpty()){
+            for(int i=0;i<6;i++){
+                nNW.add(new float[6]);
+                for(int z=0;z<nNW.get(i).length;z++){
+                    nNW.get(i)[z]=(float)Math.random();
+                }
+            }
+        }else{
+            nNW=fileRepo.getnNW();
+        }
+    }
+
+    //results to feed 7 neurons
+    private float[] resultList2 =new float[6];
+
+    // adding one more layer
+
     private List<float[]> nMW = new ArrayList<>();
 
     public void setnMW(List<float[]> nMW){
@@ -130,7 +158,7 @@ public class Brain {
     }
 
     //results to feed 7 neurons
-    private float[] resultList2 =new float[6];
+    private float[] resultList3 =new float[6];
     //weights from neurons to decision
     private List<float[]> nDW = new ArrayList<>();
     public void setnDW(List<float[]> nDW){
@@ -174,7 +202,7 @@ public class Brain {
         for(int i = 0; i< resultList2.length; i++){
             resultList2[i]=0;
             for(int k=0; k<resultList1.length; k++){
-                float product=resultList1[k]*nMW.get(i)[k];
+                float product=resultList1[k]*nNW.get(i)[k];
                 resultList2[i]= resultList2[i]+product;
             }
             //Ral.U
@@ -183,19 +211,33 @@ public class Brain {
             }
         }
     }
+    private void calculation1c(){
+        for(int i = 0; i< resultList3.length; i++){
+            resultList3[i]=0;
+            for(int k=0; k<resultList2.length; k++){
+                float product=resultList2[k]*nMW.get(i)[k];
+                resultList3[i]= resultList3[i]+product;
+            }
+            //Ral.U
+            if (resultList3[i]<0) {
+                resultList3[i]=0;
+            }
+        }
+    }
     private void calculation2(){
         for(int i=0; i<resultsForDecision.length; i++){
             resultsForDecision[i]=0;
-            for(int k = 0; k< resultList2.length; k++){
-                float product= resultList2[k]*nDW.get(i)[k];
+            for(int k = 0; k< resultList3.length; k++){
+                float product= resultList3[k]*nDW.get(i)[k];
                 resultsForDecision[i]=resultsForDecision[i]+product;
             }
-            //System.out.println(resultsForDecision[i]+" result2 for decision ");
+            //System.out.println(resultsForDecision[i]+" result3 for decision ");
         }
     }
     public char cellThinking(){
         calculation1a();
         calculation1b();
+        calculation1c();
         calculation2();
         float max=0;
         int index=0;
@@ -227,7 +269,7 @@ public class Brain {
 
     public void brainWRandom(){
 
-        switch ((int)(Math.random()*3)){
+        switch ((int)(Math.random()*4)){
             case 0:
                 randomMutationNW();
                 //System.out.println("nW");
@@ -240,11 +282,15 @@ public class Brain {
                 randomMutationNDW();
                 //System.out.println("nDW");
                 break;
+            case 3:
+                randomMutationNNW();
+                //System.out.println("nNW");
+                break;
         }
 
     }
     public void brainWriteToFile(){
-        fileRepo.writeEverythingToFile(nW, nMW, nDW);
+        fileRepo.writeEverythingToFile(nW, nNW, nMW, nDW);
     }
 
     public void randomMutationNW(){
@@ -258,6 +304,19 @@ public class Brain {
             //System.out.print("nW+ "+r+" "+c+" ");
         }
     }
+
+    public void randomMutationNNW(){
+        int r=(int)(Math.random()*nNW.size());
+        int c=(int)(Math.random()*nNW.get(0).length);
+        if(Math.random()>0.5){
+            nNW.get(r)[c]=nNW.get(r)[c] - 0.1f;
+            //System.out.print("nNW- "+r+" "+c+" ");
+        }else{
+            nNW.get(r)[c]=nNW.get(r)[c] + 0.1f;
+            //System.out.print("nNW+ "+r+" "+c+" ");
+        }
+    }
+
     public void randomMutationNDW(){
         int r=(int)(Math.random()*nDW.size());
         int c=(int)(Math.random()*nDW.get(0).length);
