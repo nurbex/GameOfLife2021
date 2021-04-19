@@ -25,7 +25,7 @@ public class CellLife extends GameObject{
     private int cellGeneration;
     private int lifeTime=0;
     private int cellFat =20;
-    private int foodCalories =20;
+    private int foodCalories =10;
     private int poisonEffect=10;
     private int stoneEffect=1;
     private char isLooking = 'n';
