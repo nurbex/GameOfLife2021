@@ -33,6 +33,12 @@ public class Brain {
     // o    node node node  y
     // o    node node node  y
     //      node node node  y
+    //      node node node
+    //      node node node
+    //      node node node
+    //      node node node
+    //      node node node
+    //      node node node
 
     //cell brain has one hidden layer with 7 neurons
     // need 7 array list of weights for each 7 neuron
@@ -89,7 +95,7 @@ public class Brain {
     }
     private void nWListCreation(){
         if(fileRepo.getnW().isEmpty()){
-            for(int i=0;i<6;i++){
+            for(int i=0;i<12;i++){
                 nW.add(new float[3]);
                 for(int z=0;z<nW.get(i).length;z++){
 
@@ -102,7 +108,7 @@ public class Brain {
         }
 
     }
-    private float[] resultList1=new float[6];
+    private float[] resultList1=new float[12];
 
     // adding one more layer
 
@@ -117,8 +123,8 @@ public class Brain {
 
     private void nNWListCreation(){
         if(fileRepo.getnNW().isEmpty()){
-            for(int i=0;i<6;i++){
-                nNW.add(new float[6]);
+            for(int i=0;i<12;i++){
+                nNW.add(new float[12]);
                 for(int z=0;z<nNW.get(i).length;z++){
                     nNW.get(i)[z]=(float)Math.random();
                 }
@@ -129,7 +135,7 @@ public class Brain {
     }
 
     //results to feed 7 neurons
-    private float[] resultList2 =new float[6];
+    private float[] resultList2 =new float[12];
 
     // adding one more layer
 
@@ -144,8 +150,8 @@ public class Brain {
 
     private void nMWListCreation(){
         if(fileRepo.getnMW().isEmpty()){
-            for(int i=0;i<6;i++){
-                nMW.add(new float[6]);
+            for(int i=0;i<12;i++){
+                nMW.add(new float[12]);
                 for(int z=0;z<nMW.get(i).length;z++){
                     //nMW.get(i)[z]=(float)(Math.random()*5-Math.random()*5);
                     nMW.get(i)[z]=(float)Math.random();
@@ -158,7 +164,7 @@ public class Brain {
     }
 
     //results to feed 7 neurons
-    private float[] resultList3 =new float[6];
+    private float[] resultList3 =new float[12];
     //weights from neurons to decision
     private List<float[]> nDW = new ArrayList<>();
     public void setnDW(List<float[]> nDW){
@@ -170,7 +176,7 @@ public class Brain {
     private void nDWListCreation(){
         if(fileRepo.getnDW().isEmpty()){
             for(int i=0;i<5;i++){
-                nDW.add(new float[6]);
+                nDW.add(new float[12]);
                 for(int z=0;z<nDW.get(i).length;z++){
                     //nDW.get(i)[z]=(float)(Math.random()*5-Math.random()*5);
                     nDW.get(i)[z]=(float)Math.random();
@@ -205,6 +211,9 @@ public class Brain {
                 float product=resultList1[k]*nNW.get(i)[k];
                 resultList2[i]= resultList2[i]+product;
             }
+            //sigmoid function
+            //resultList2[i]=(float) (1/( 1 + Math.pow(Math.E,(-1*resultList2[i]))));
+
             //Ral.U
             if (resultList2[i]<0) {
                 resultList2[i]=0;

@@ -21,11 +21,11 @@ import java.util.stream.Collectors;
 public class GUIcontroller<i> {
     private Boolean start = true;
     private int cellPopulation=20;
-    private int foodAmount=100;
+    private int foodAmount=140;
     private int poisonAmount=15;
     private int stones=15;
     private int generation=0;
-    private int maxLifeTime=100;
+    private int maxLifeTime=40;
     @FXML
     private Pane gameArena = new Pane();
 
