@@ -75,6 +75,7 @@ public class GUIcontroller<i> {
                         if(e.getCellFat()<=0){
                             e.setIsDead(true);
                         }
+                        e.setCantMoveFalse();
                         break;
                     case 'm':
                         e.cellMoves(allGameObjects, allCells, gameArena);
@@ -90,6 +91,7 @@ public class GUIcontroller<i> {
                             e.setIsDead(true);
                         }
                         allGameObjects.removeIf(GameObject::getIsDead);
+                        e.setCantMoveFalse();
                         break;
                     case 'l':
                         e.cellTurnLeft();
@@ -97,6 +99,7 @@ public class GUIcontroller<i> {
                         if(e.getCellFat()<=0){
                             e.setIsDead(true);
                         }
+                        e.setCantMoveFalse();
                         break;
                     case 'r':
                         e.cellTurnRight();
@@ -104,9 +107,11 @@ public class GUIcontroller<i> {
                         if(e.getCellFat()<=0){
                             e.setIsDead(true);
                         }
+                        e.setCantMoveFalse();
                         break;
                     default:
                         System.out.println("Doing default");
+                        e.setCantMoveFalse();
                 }
                 /*System.out.print(e.cellsThinkAndAct() + " llllll " + e.getCellFat()+" ");
                 for(int p=0;p<e.getCellEyes().size();p++){

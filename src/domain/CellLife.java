@@ -29,6 +29,7 @@ public class CellLife extends GameObject{
     private int poisonEffect=10;
     private int stoneEffect=1;
     private char isLooking = 'n';
+    private boolean cantMove=false;
     //getting data from GUI controller
     private boolean hitWall=false;
     private List<CellEye> cellEyes=new ArrayList<>();
@@ -88,6 +89,9 @@ public class CellLife extends GameObject{
     }
     public List<CellEye> getCellEyes(){
         return cellEyes;
+    }
+    public void setCantMoveFalse(){
+        cantMove=false;
     }
 
     //methods
@@ -193,6 +197,8 @@ public class CellLife extends GameObject{
                 }
                 break;
         }
+
+
         //if cell hits no wall, it checks for other gameObjects or other cells
         if(!hitWall){
             for(GameObject g: allGameObjects){
@@ -215,6 +221,10 @@ public class CellLife extends GameObject{
             /*if(getCellFat()<0) {
                 setIsDead(true);
             }*/
+            cantMove=false;
+        }else{
+            cantMove=true;
+            //System.out.println("cantMove11111");
         }
     }
 
@@ -414,7 +424,7 @@ public class CellLife extends GameObject{
     //3. l for turn left
     //4. r for turn right
     public char cellsThinkAndAct(){
-        brain.cellSeesToDigits(cellEyes);
+        brain.cellSeesToDigits(cellEyes, cantMove);
         decision= brain.cellThinking();
         return decision;
     }
