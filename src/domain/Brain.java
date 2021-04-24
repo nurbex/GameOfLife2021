@@ -105,7 +105,7 @@ public class Brain {
                 nW.add(new float[4]);
                 for(int z=0;z<nW.get(i).length;z++){
 
-                    nW.get(i)[z]=(float)Math.random();
+                    nW.get(i)[z]=0.0f; //(float)Math.random();
                     //System.out.print(nW.get(i)[z]+" ");
                 }
             }
@@ -132,7 +132,7 @@ public class Brain {
             for(int i=0;i<12;i++){
                 nNW.add(new float[12]);
                 for(int z=0;z<nNW.get(i).length;z++){
-                    nNW.get(i)[z]=(float)Math.random();
+                    nNW.get(i)[z]=0.0f; //(float)Math.random();
                 }
             }
         }else{
@@ -160,7 +160,7 @@ public class Brain {
                 nMW.add(new float[12]);
                 for(int z=0;z<nMW.get(i).length;z++){
                     //nMW.get(i)[z]=(float)(Math.random()*5-Math.random()*5);
-                    nMW.get(i)[z]=(float)Math.random();
+                    nMW.get(i)[z]=0.0f; //(float)Math.random();
                     //System.out.print(nMW.get(i)[z]+" ");
                 }
             }
@@ -185,7 +185,7 @@ public class Brain {
                 nDW.add(new float[12]);
                 for(int z=0;z<nDW.get(i).length;z++){
                     //nDW.get(i)[z]=(float)(Math.random()*5-Math.random()*5);
-                    nDW.get(i)[z]=(float)Math.random();
+                    nDW.get(i)[z]=0.0f; //(float)Math.random();
                     //System.out.print(nDW.get(i)[z]+" ");
                 }
             }
@@ -218,12 +218,12 @@ public class Brain {
                 resultList2[i]= resultList2[i]+product;
             }
             //sigmoid function
-            resultList2[i]=(float) (1/( 1 + Math.pow(Math.E,(-1*resultList2[i]))));
+            //resultList2[i]=(float) (1/( 1 + Math.pow(Math.E,(-1*resultList2[i]))));
 
             //Ral.U
-            /*if (resultList2[i]<0) {
+            if (resultList2[i]<0) {
                 resultList2[i]=0;
-            }*/
+            }
         }
     }
     private void calculation1c(){
