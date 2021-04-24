@@ -58,37 +58,41 @@ public class Brain {
     private char decision='n';
     private FileRepo fileRepo=new FileRepo();
     //what cell sees in digits
-    private float[] cellSensesInDigits =new float[4];
-    public void cellSeesToDigits(List<CellEye> cellEyes, boolean cantMove){
+    private float[] sensesInDigits =new float[5];
+    public void senseToDigits(List<CellEye> cellEyes, boolean cantMove, int cellFat){
         for(int i=0; i<cellEyes.size()-1;i++){
             switch (cellEyes.get(i).getEyeSees()){
                 case 'p':
-                    cellSensesInDigits[i]=10f;
+                    sensesInDigits[i]=10f;
                     break;
                 case 'w':
-                    cellSensesInDigits[i]=-20f;
+                    sensesInDigits[i]=-20f;
                     break;
                 case 's':
-                    cellSensesInDigits[i]=40f;
+                    sensesInDigits[i]=40f;
                     break;
                 case 'c':
-                    cellSensesInDigits[i]=70f;
+                    sensesInDigits[i]=70f;
                     break;
                 case 'f':
-                    cellSensesInDigits[i]=100f;
+                    sensesInDigits[i]=100f;
                     break;
                 default:
-                    cellSensesInDigits[i]=0.01f;
+                    sensesInDigits[i]=0.01f;
                     break;
             }
             //System.out.print(cellEyes.get(i).getEyeSees()+" ");
         }
+        //if hits something it will know about it
         if(cantMove){
-            cellSensesInDigits[3]=200;
+            sensesInDigits[3]=200;
             //System.out.println("cantmove true");
         }else{
-            cellSensesInDigits[3]=-200;
+            sensesInDigits[3]=-200;
         }
+
+        //it will know how hungry it is
+        sensesInDigits[4]=Float.parseFloat(String.valueOf(cellFat));
         //System.out.print("----------");
     }
     //weights from eyes to neurons
@@ -102,7 +106,7 @@ public class Brain {
     private void nWListCreation(){
         if(fileRepo.getnW().isEmpty()){
             for(int i=0;i<12;i++){
-                nW.add(new float[4]);
+                nW.add(new float[5]);
                 for(int z=0;z<nW.get(i).length;z++){
 
                     nW.get(i)[z]=0.0f; //(float)Math.random();
@@ -201,8 +205,8 @@ public class Brain {
     private void calculation1a(){
         for(int i = 0; i< resultList1.length; i++){
             resultList1[i]=0;
-            for(int k = 0; k< cellSensesInDigits.length; k++){
-                float product= cellSensesInDigits[k]*nW.get(i)[k];
+            for(int k = 0; k< sensesInDigits.length; k++){
+                float product= sensesInDigits[k]*nW.get(i)[k];
                 resultList1[i]= resultList1[i]+product;
             }
             //sigmoid function

@@ -56,11 +56,12 @@ public class FileRepo {
         // nW ; value0 ; value1 ;value2; value3; value4; value5; value6
 
         String[] tokens = line.split(";");
-        float[] floatnW = new float[4];
+        float[] floatnW = new float[5];
         floatnW[0]=Float.parseFloat(tokens[1]);
         floatnW[1]=Float.parseFloat(tokens[2]);
         floatnW[2]=Float.parseFloat(tokens[3]);
         floatnW[3]=Float.parseFloat(tokens[4]);
+        floatnW[4]=Float.parseFloat(tokens[5]);
         return floatnW;
     }
 
@@ -149,7 +150,7 @@ public class FileRepo {
 
         StringBuilder content = new StringBuilder();
         for (float[] f : nW) {
-            content.append("nW;"+f[0]+"; "+f[1]+"; "+f[2]+";"+f[3]+"\n");
+            content.append("nW;"+f[0]+"; "+f[1]+"; "+f[2]+";"+f[3]+";"+f[4]+"\n");
         }
 
         for (float[] f : nNW) {

@@ -424,7 +424,7 @@ public class CellLife extends GameObject{
     //3. l for turn left
     //4. r for turn right
     public char cellsThinkAndAct(){
-        brain.cellSeesToDigits(cellEyes, cantMove);
+        brain.senseToDigits(cellEyes, cantMove, cellFat);
         decision= brain.cellThinking();
         return decision;
     }
