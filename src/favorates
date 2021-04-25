@@ -472,7 +472,7 @@ nDW;0.0; 0.1; 0.2; 0.1; -0.1; 0.0; -0.1; -0.1; -0.1; 0.0; 0.1; 0.0
 nDW;-0.1; 0.0; -0.1; 0.1; 0.1; 0.0; 0.2; 0.1; -0.2; 0.1; 0.2; 0.0
 nDW;-0.1; 0.0; -0.2; -0.2; 0.1; 0.0; -0.2; -0.2; -0.1; 0.0; 0.20000002; -0.2
 
-#21 frome hero to zero, added new sense(cellFat), now it knows how much energy it has. it learns faster, it gets stuck less now
+#21 THE WINNER. from hero to zero, added new sense(cellFat), now it knows how much energy it has. it learns faster, it gets stuck less now, max life near 7090
 nW;-0.1; 0.1; 0.0;0.0;-0.2
 nW;0.0; 0.1; 0.0;-0.2;0.0
 nW;0.0; 0.0; 0.0;0.0;0.0

@@ -27,18 +27,18 @@ public class Brain {
     //4. s for stones
     //5. c for other cells
     //6. f for food
-    //      node node node
-    //      node node node  y
-    // o    node node node  y
-    // o    node node node  y
-    // o    node node node  y
-    //      node node node  y
-    //      node node node
-    //      node node node
-    //      node node node
-    //      node node node
-    //      node node node
-    //      node node node
+    //                                  node node node
+    //                                  node node node  y
+    // o                                node node node  y
+    // o                                node node node  y
+    // o                                node node node  y
+    // senses if it hits something      node node node  y
+    //                                  node node node
+    //                                  node node node
+    //                                  node node node
+    //                                  node node node
+    //                                  node node node
+    //                                  node node node
 
     //cell brain has one hidden layer with 7 neurons
     // need 7 array list of weights for each 7 neuron
@@ -56,9 +56,14 @@ public class Brain {
 
     //decision
     private char decision='n';
+    private float decisionN=0.0f;
+    private float decisionM=0.0f;
+    private float decisionE=0.0f;
+    private float decisionL=0.0f;
+    private float decisionR=0.0f;
     private FileRepo fileRepo=new FileRepo();
     //what cell sees in digits
-    private float[] sensesInDigits =new float[5];
+    private float[] sensesInDigits =new float[10];
     public void senseToDigits(List<CellEye> cellEyes, boolean cantMove, int cellFat){
         for(int i=0; i<cellEyes.size()-1;i++){
             switch (cellEyes.get(i).getEyeSees()){
@@ -93,6 +98,14 @@ public class Brain {
 
         //it will know how hungry it is
         sensesInDigits[4]=Float.parseFloat(String.valueOf(cellFat));
+
+        //it will know what it did last time, last decision
+        sensesInDigits[5]=decisionN;
+        sensesInDigits[6]=decisionM;
+        sensesInDigits[7]=decisionE;
+        sensesInDigits[8]=decisionL;
+        sensesInDigits[9]=decisionR;
+
         //System.out.print("----------");
     }
     //weights from eyes to neurons
@@ -105,8 +118,8 @@ public class Brain {
     }
     private void nWListCreation(){
         if(fileRepo.getnW().isEmpty()){
-            for(int i=0;i<12;i++){
-                nW.add(new float[5]);
+            for(int i=0;i<30;i++){
+                nW.add(new float[10]);
                 for(int z=0;z<nW.get(i).length;z++){
 
                     nW.get(i)[z]=0.0f; //(float)Math.random();
@@ -118,7 +131,7 @@ public class Brain {
         }
 
     }
-    private float[] resultList1=new float[12];
+    private float[] resultList1=new float[30];
 
     // adding one more layer
 
@@ -133,8 +146,8 @@ public class Brain {
 
     private void nNWListCreation(){
         if(fileRepo.getnNW().isEmpty()){
-            for(int i=0;i<12;i++){
-                nNW.add(new float[12]);
+            for(int i=0;i<30;i++){
+                nNW.add(new float[30]);
                 for(int z=0;z<nNW.get(i).length;z++){
                     nNW.get(i)[z]=0.0f; //(float)Math.random();
                 }
@@ -145,7 +158,7 @@ public class Brain {
     }
 
     //results to feed 7 neurons
-    private float[] resultList2 =new float[12];
+    private float[] resultList2 =new float[30];
 
     // adding one more layer
 
@@ -160,8 +173,8 @@ public class Brain {
 
     private void nMWListCreation(){
         if(fileRepo.getnMW().isEmpty()){
-            for(int i=0;i<12;i++){
-                nMW.add(new float[12]);
+            for(int i=0;i<30;i++){
+                nMW.add(new float[30]);
                 for(int z=0;z<nMW.get(i).length;z++){
                     //nMW.get(i)[z]=(float)(Math.random()*5-Math.random()*5);
                     nMW.get(i)[z]=0.0f; //(float)Math.random();
@@ -174,7 +187,7 @@ public class Brain {
     }
 
     //results to feed 7 neurons
-    private float[] resultList3 =new float[12];
+    private float[] resultList3 =new float[30];
     //weights from neurons to decision
     private List<float[]> nDW = new ArrayList<>();
     public void setnDW(List<float[]> nDW){
@@ -186,7 +199,7 @@ public class Brain {
     private void nDWListCreation(){
         if(fileRepo.getnDW().isEmpty()){
             for(int i=0;i<5;i++){
-                nDW.add(new float[12]);
+                nDW.add(new float[30]);
                 for(int z=0;z<nDW.get(i).length;z++){
                     //nDW.get(i)[z]=(float)(Math.random()*5-Math.random()*5);
                     nDW.get(i)[z]=0.0f; //(float)Math.random();
@@ -213,7 +226,6 @@ public class Brain {
             resultList1[i]=(float) (1/( 1 + Math.pow(Math.E,(-1*resultList1[i]))));
         }
     }
-
     private void calculation1b(){
         for(int i = 0; i< resultList2.length; i++){
             resultList2[i]=0;
@@ -266,21 +278,31 @@ public class Brain {
                 index=i;
             }
         }
+        decisionN=0.0f;
+        decisionM=0.0f;
+        decisionE=0.0f;
+        decisionL=0.0f;
+        decisionR=0.0f;
         switch (index){
             case 0:
                 decision='n';
+                decisionN=300.0f;
                 break;
             case 1:
                 decision='m';
+                decisionM=300.0f;
                 break;
             case 2:
                 decision='e';
+                decisionE=300.0f;
                 break;
             case 3:
                 decision='l';
+                decisionL=300.0f;
                 break;
             case 4:
                 decision='r';
+                decisionR=300.0f;
                 break;
         }
         return decision;
