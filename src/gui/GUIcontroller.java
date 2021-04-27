@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 public class GUIcontroller<i> {
     private Boolean start = true;
     private int cellPopulation=20;
-    private int foodAmount=140;
+    private int foodAmount=150;
     private int poisonAmount=15;
     private int stones=15;
     private int generation=0;
@@ -76,6 +76,7 @@ public class GUIcontroller<i> {
                             e.setIsDead(true);
                         }
                         e.setCantMoveFalse();
+                        e.setCantEatFalse();
                         break;
                     case 'm':
                         e.cellMoves(allGameObjects, allCells, gameArena);
@@ -83,6 +84,7 @@ public class GUIcontroller<i> {
                         if(e.getCellFat()<=0){
                             e.setIsDead(true);
                         }
+                        e.setCantEatFalse();
                         break;
                     case 'e':
                         e.cellEats(allGameObjects, allCells, gameArena);
@@ -100,6 +102,7 @@ public class GUIcontroller<i> {
                             e.setIsDead(true);
                         }
                         e.setCantMoveFalse();
+                        e.setCantEatFalse();
                         break;
                     case 'r':
                         e.cellTurnRight();
@@ -108,10 +111,13 @@ public class GUIcontroller<i> {
                             e.setIsDead(true);
                         }
                         e.setCantMoveFalse();
+                        e.setCantEatFalse();
                         break;
                     default:
                         System.out.println("Doing default");
                         e.setCantMoveFalse();
+                        e.setCantEatFalse();
+                        break;
                 }
                 /*System.out.print(e.cellsThinkAndAct() + " llllll " + e.getCellFat()+" ");
                 for(int p=0;p<e.getCellEyes().size();p++){
@@ -258,7 +264,7 @@ public class GUIcontroller<i> {
             //System.out.println("this is max "+max);
         }
         generation++;
-        maxLifeTime--;
+        maxLifeTime=maxLifeTime-1;
         //System.out.println("generation: "+ generation);
         for(GameObject e: allGameObjects){
             gameArena.getChildren().add(e.getShapeR());

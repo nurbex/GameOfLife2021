@@ -5,7 +5,6 @@ import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class CellLife extends GameObject{
     public CellLife(){}
@@ -21,7 +20,6 @@ public class CellLife extends GameObject{
         cellEyes.add(new CellEye());
     }
     //creating cell properties
-    private String cellID= UUID.randomUUID().toString();
     private int cellGeneration;
     private int lifeTime=0;
     private int cellFat =20;
@@ -30,8 +28,8 @@ public class CellLife extends GameObject{
     private int stoneEffect=1;
     private char isLooking = 'n';
     private boolean cantMove=false;
+    private boolean cantEat=false;
     //getting data from GUI controller
-    private boolean hitWall=false;
     private List<CellEye> cellEyes=new ArrayList<>();
     //0.eyeN 1.eyeNN 2.eyeNW 3.eyeNE 4.eyeW 5.eyeE 6.eyeS
     // cells eyes scheme, o for eyes, @ for cell it self, looking north(n)
@@ -48,9 +46,6 @@ public class CellLife extends GameObject{
     }
     public int getLifeTime(){
         return lifeTime;
-    }
-    public String getCellID(){
-        return cellID;
     }
     public void setCellGeneration(int g){
         cellGeneration=g;
@@ -92,6 +87,9 @@ public class CellLife extends GameObject{
     }
     public void setCantMoveFalse(){
         cantMove=false;
+    }
+    public void setCantEatFalse(){
+        cantEat=false;
     }
 
     //methods
@@ -213,6 +211,8 @@ public class CellLife extends GameObject{
                     }
                 }
             }
+        }else{
+            cantMove=true;
         }
         //if cell hits nothing, it moves
         if(!match){
@@ -230,7 +230,6 @@ public class CellLife extends GameObject{
 
     public void cellEats(List<GameObject> allGameObjects, List<CellLife> allCells, Pane gameArena){
         //data set
-
         double x = super.getShapeR().getX();
         double y = super.getShapeR().getY();
         boolean hitWall=false;
@@ -238,42 +237,89 @@ public class CellLife extends GameObject{
         //action
         switch (isLooking){
             case 'n':
+                if(y<=0){
+                    y=0;
+                    hitWall=true;
+                }else{
                     y=y-10;
+                }
                 break;
             case 'e':
+                if(x>=(gameArena.getPrefWidth()-10)){
+                    x=(gameArena.getPrefWidth()-10);
+                    hitWall=true;
+                }else{
                     x=x+10;
+                }
                 break;
             case 's':
+                if(y>=(gameArena.getPrefHeight()-10)){
+                    y=(gameArena.getPrefHeight()-10);
+                    hitWall=true;
+                }else{
                     y=y+10;
+                }
                 break;
             case 'w':
+                if(x<=0){
+                    x=0;
+                    hitWall=true;
+                }else{
                     x=x-10;
+                }
                 break;
         }
-        //if cell hits no wall, it checks for other gameObjects or other cells
 
-        for(GameObject g: allGameObjects){
-            if((x == g.getShapeR().getX())&&(y == g.getShapeR().getY())){
-                if(g.getTypeO() == 'f'){
-                    //cell eats food and gets fat
-                    cellEyes.get(0).setEyeSees('n');
-                    g.setIsDead(true);
-                    setCellFat(getCellFat() + foodCalories);
+
+        //if cell hits no wall, it checks for other gameObjects or other cells
+        if(!hitWall){
+            for(GameObject g: allGameObjects){
+                if((x == g.getShapeR().getX())&&(y == g.getShapeR().getY())){
+                    if(g.getTypeO() == 'f'){
+                        //cell eats food and gets fat
+                        cellEyes.get(0).setEyeSees('n');
+                        g.setIsDead(true);
+                        setCellFat(getCellFat() + foodCalories);
+                        match=true;
+                    }
+                    if(g.getTypeO() == 'p'){
+                        //cell eats poison and dies
+                        setIsDead(true);
+                        //g.setIsDead(true);
+                        //setCellFat(getCellFat() - poisonEffect);
+                        match=true;
+                    }
+                    if(g.getTypeO() == 's'){
+                        //cell eats poison and dies
+                        //setIsDead(true);
+                        setCellFat(getCellFat() - stoneEffect);
+                        match=true;
+                    }
                 }
-                if(g.getTypeO() == 'p'){
-                    //cell eats poison and dies
-                    setIsDead(true);
-                    //g.setIsDead(true);
-                    //setCellFat(getCellFat() - poisonEffect);
-                }
-                if(g.getTypeO() == 's'){
-                    //cell eats poison and dies
-                    //setIsDead(true);
-                    setCellFat(getCellFat() - stoneEffect);
+            }
+            if(!match){
+                for(CellLife c: allCells){
+                    if((x == c.getShapeR().getX())&&(y == c.getShapeR().getY())){
+                        match=true;
+                    }
                 }
             }
         }
-
+        else{
+            cantEat=true;
+        }
+        //if cell hits nothing, it moves
+        if(!match){
+            super.getShapeR().setX(x);
+            super.getShapeR().setY(y);
+            /*if(getCellFat()<0) {
+                setIsDead(true);
+            }*/
+            cantEat=false;
+        }else{
+            cantEat=true;
+            //System.out.println("cantMove11111");
+        }
         //removes all dead gameObjects
         allGameObjects.removeIf(GameObject::getIsDead);
     }
@@ -424,7 +470,7 @@ public class CellLife extends GameObject{
     //3. l for turn left
     //4. r for turn right
     public char cellsThinkAndAct(){
-        brain.senseToDigits(cellEyes, cantMove, cellFat);
+        brain.senseToDigits(cellEyes, cantMove, cantEat, cellFat);
         decision= brain.cellThinking();
         return decision;
     }

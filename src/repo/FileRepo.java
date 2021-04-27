@@ -56,7 +56,7 @@ public class FileRepo {
         // nW ; value0 ; value1 ;value2; value3; value4; value5; value6
 
         String[] tokens = line.split(";");
-        float[] floatnW = new float[10];
+        float[] floatnW = new float[11];
         for(int i=0; i < floatnW.length; i++){
             floatnW[i]=Float.parseFloat(tokens[i+1]);
         }

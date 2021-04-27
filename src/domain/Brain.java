@@ -63,8 +63,8 @@ public class Brain {
     private float decisionR=0.0f;
     private FileRepo fileRepo=new FileRepo();
     //what cell sees in digits
-    private float[] sensesInDigits =new float[10];
-    public void senseToDigits(List<CellEye> cellEyes, boolean cantMove, int cellFat){
+    private float[] sensesInDigits =new float[11];
+    public void senseToDigits(List<CellEye> cellEyes, boolean cantMove, boolean cantEat, int cellFat){
         for(int i=0; i<cellEyes.size()-1;i++){
             switch (cellEyes.get(i).getEyeSees()){
                 case 'p':
@@ -96,15 +96,23 @@ public class Brain {
             sensesInDigits[3]=-200;
         }
 
+        //if cell cant it something it will know
+
+        if(cantMove){
+            sensesInDigits[4]=400;
+            //System.out.println("cantmove true");
+        }else{
+            sensesInDigits[4]=-400;
+        }
         //it will know how hungry it is
-        sensesInDigits[4]=Float.parseFloat(String.valueOf(cellFat));
+        sensesInDigits[5]=Float.parseFloat(String.valueOf(cellFat));
 
         //it will know what it did last time, last decision
-        sensesInDigits[5]=decisionN;
         sensesInDigits[6]=decisionM;
         sensesInDigits[7]=decisionE;
         sensesInDigits[8]=decisionL;
         sensesInDigits[9]=decisionR;
+        sensesInDigits[10]=decisionN;
 
         //System.out.print("----------");
     }
@@ -119,7 +127,7 @@ public class Brain {
     private void nWListCreation(){
         if(fileRepo.getnW().isEmpty()){
             for(int i=0;i<30;i++){
-                nW.add(new float[10]);
+                nW.add(new float[11]);
                 for(int z=0;z<nW.get(i).length;z++){
 
                     nW.get(i)[z]=0.0f; //(float)Math.random();
