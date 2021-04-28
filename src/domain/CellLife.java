@@ -23,7 +23,7 @@ public class CellLife extends GameObject{
     private int cellGeneration;
     private int lifeTime=0;
     private int cellFat =20;
-    private int foodCalories =10;
+    private int foodCalories =8;
     private int poisonEffect=10;
     private int stoneEffect=1;
     private char isLooking = 'n';
@@ -211,20 +211,20 @@ public class CellLife extends GameObject{
                     }
                 }
             }
-        }else{
-            cantMove=true;
-        }
-        //if cell hits nothing, it moves
-        if(!match){
-            super.getShapeR().setX(x);
-            super.getShapeR().setY(y);
+            //if cell hits nothing, it moves
+            if(!match){
+                super.getShapeR().setX(x);
+                super.getShapeR().setY(y);
             /*if(getCellFat()<0) {
                 setIsDead(true);
             }*/
-            cantMove=false;
+                cantMove=false;
+            }else{
+                cantMove=true;
+                //System.out.println("cantMove11111");
+            }
         }else{
             cantMove=true;
-            //System.out.println("cantMove11111");
         }
     }
 
@@ -269,8 +269,6 @@ public class CellLife extends GameObject{
                 }
                 break;
         }
-
-
         //if cell hits no wall, it checks for other gameObjects or other cells
         if(!hitWall){
             for(GameObject g: allGameObjects){
@@ -304,22 +302,17 @@ public class CellLife extends GameObject{
                     }
                 }
             }
-        }
-        else{
-            cantEat=true;
-        }
-        //if cell hits nothing, it moves
-        if(!match){
-            super.getShapeR().setX(x);
-            super.getShapeR().setY(y);
-            /*if(getCellFat()<0) {
-                setIsDead(true);
-            }*/
-            cantEat=false;
+            //if cell hits nothing, it moves
+            if(!match){
+                cantEat=false;
+            }else{
+                cantEat=true;
+                //System.out.println("cantMove11111");
+            }
         }else{
             cantEat=true;
-            //System.out.println("cantMove11111");
         }
+
         //removes all dead gameObjects
         allGameObjects.removeIf(GameObject::getIsDead);
     }

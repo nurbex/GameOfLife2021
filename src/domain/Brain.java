@@ -100,7 +100,7 @@ public class Brain {
 
         if(cantMove){
             sensesInDigits[4]=400;
-            //System.out.println("cantmove true");
+            //System.out.println("cantEat true");
         }else{
             sensesInDigits[4]=-400;
         }
