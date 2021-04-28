@@ -22,6 +22,7 @@ public class CellLife extends GameObject{
     //creating cell properties
     private int cellGeneration;
     private int lifeTime=0;
+    private int cellMaxFat=5000;
     private int cellFat =20;
     private int foodCalories =8;
     private int poisonEffect=10;
@@ -277,7 +278,9 @@ public class CellLife extends GameObject{
                         //cell eats food and gets fat
                         cellEyes.get(0).setEyeSees('n');
                         g.setIsDead(true);
-                        setCellFat(getCellFat() + foodCalories);
+                        if(getCellFat()<=cellMaxFat){
+                            setCellFat(getCellFat() + foodCalories);
+                        }
                         match=true;
                     }
                     if(g.getTypeO() == 'p'){
