@@ -11,6 +11,7 @@ import java.util.List;
 
 public class FileRepo {
     String fileName;
+    private int neurons;
 
     private List<float[]> nW = new ArrayList<>();
     private List<float[]> nNW = new ArrayList<>();
@@ -19,7 +20,8 @@ public class FileRepo {
 
 
 
-    public FileRepo(){
+    public FileRepo(int neurons){
+        this.neurons=neurons;
         this.fileName = "brainActivity.txt";
         readAndParseData();
     }
@@ -67,7 +69,7 @@ public class FileRepo {
         // nW ; value0 ; value1 ;value2; value3; value4; value5; value6
 
         String[] tokens = line.split(";");
-        float[] floatnDW = new float[30];
+        float[] floatnDW = new float[neurons];
         for(int i=0; i < floatnDW.length; i++){
             floatnDW[i]=Float.parseFloat(tokens[i+1]);
         }
@@ -78,7 +80,7 @@ public class FileRepo {
         // nW ; value0 ; value1 ;value2; value3; value4; value5; value6
 
         String[] tokens = line.split(";");
-        float[] floatnMW = new float[30];
+        float[] floatnMW = new float[neurons];
         for(int i=0; i < floatnMW.length; i++){
             floatnMW[i]=Float.parseFloat(tokens[i+1]);
         }
@@ -89,7 +91,7 @@ public class FileRepo {
         // nW ; value0 ; value1 ;value2; value3; value4; value5; value6
 
         String[] tokens = line.split(";");
-        float[] floatnNW = new float[30];
+        float[] floatnNW = new float[neurons];
         for(int i=0; i < floatnNW.length; i++){
             floatnNW[i]=Float.parseFloat(tokens[i+1]);
         }

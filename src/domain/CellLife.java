@@ -22,11 +22,11 @@ public class CellLife extends GameObject{
     //creating cell properties
     private int cellGeneration;
     private int lifeTime=0;
-    private int cellMaxFat=5000;
-    private int cellFat =20;
-    private int foodCalories =8;
+    private int cellMaxFat=200; //max cell fat
+    private int cellFat =20; //cell fat at the beginning
+    private final int foodCalories =7;
     private int poisonEffect=10;
-    private int stoneEffect=1;
+    private final int stoneEffect=1;
     private char isLooking = 'n';
     private boolean cantMove=false;
     private boolean cantEat=false;
@@ -356,7 +356,7 @@ public class CellLife extends GameObject{
         //System.out.println("right");
     }
 
-    //what cell sees and does
+    //what cell sees and does something, this code is not used, I forgot why
     public void cellsAction(List<GameObject> allGameObjects, List<CellLife> allCells, Pane gameArena){
             //data set
             char faceDirection=getIsLooking();
