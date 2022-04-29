@@ -13,10 +13,10 @@ public class FileRepo {
     String fileName;
     private int neurons;
 
-    private List<float[]> nW = new ArrayList<>();
-    private List<float[]> nNW = new ArrayList<>();
-    private List<float[]> nMW = new ArrayList<>();
-    private List<float[]> nDW = new ArrayList<>();
+    private List<double[]> nW = new ArrayList<>();
+    private List<double[]> nNW = new ArrayList<>();
+    private List<double[]> nMW = new ArrayList<>();
+    private List<double[]> nDW = new ArrayList<>();
 
 
 
@@ -54,72 +54,72 @@ public class FileRepo {
     }
 
 
-    public float[] parsenW(String line){
+    public double[] parsenW(String line){
         // nW ; value0 ; value1 ;value2; value3; value4; value5; value6
 
         String[] tokens = line.split(";");
-        float[] floatnW = new float[11];
+        double[] floatnW = new double[11];
         for(int i=0; i < floatnW.length; i++){
-            floatnW[i]=Float.parseFloat(tokens[i+1]);
+            floatnW[i]=Double.parseDouble(tokens[i+1]);
         }
         return floatnW;
     }
 
-    public float[] parsenDW(String line){
+    public double[] parsenDW(String line){
         // nW ; value0 ; value1 ;value2; value3; value4; value5; value6
 
         String[] tokens = line.split(";");
-        float[] floatnDW = new float[neurons];
-        for(int i=0; i < floatnDW.length; i++){
-            floatnDW[i]=Float.parseFloat(tokens[i+1]);
+        double[] doublenDW = new double[neurons];
+        for(int i=0; i < doublenDW.length; i++){
+            doublenDW[i]=Double.parseDouble(tokens[i+1]);
         }
-        return floatnDW;
+        return doublenDW;
     }
 
-    public float[] parsenMW(String line){
+    public double[] parsenMW(String line){
         // nW ; value0 ; value1 ;value2; value3; value4; value5; value6
 
         String[] tokens = line.split(";");
-        float[] floatnMW = new float[neurons];
-        for(int i=0; i < floatnMW.length; i++){
-            floatnMW[i]=Float.parseFloat(tokens[i+1]);
+        double[] doublenMW = new double[neurons];
+        for(int i=0; i < doublenMW.length; i++){
+            doublenMW[i]=Double.parseDouble(tokens[i+1]);
         }
-        return floatnMW;
+        return doublenMW;
     }
 
-    public float[] parsenNW(String line){
+    public double[] parsenNW(String line){
         // nW ; value0 ; value1 ;value2; value3; value4; value5; value6
 
         String[] tokens = line.split(";");
-        float[] floatnNW = new float[neurons];
-        for(int i=0; i < floatnNW.length; i++){
-            floatnNW[i]=Float.parseFloat(tokens[i+1]);
+        double[] doublenNW = new double[neurons];
+        for(int i=0; i < doublenNW.length; i++){
+            doublenNW[i]=Double.parseDouble(tokens[i+1]);
         }
-        return floatnNW;
+        return doublenNW;
     }
 
 
-    public List<float[]> getnW(){
+    public List<double[]> getnW(){
         return nW;
     }
-    public List<float[]> getnDW(){
+    public List<double[]> getnDW(){
         return nDW;
     }
-    public List<float[]> getnMW(){
+    public List<double[]> getnMW(){
         return nMW;
     }
-    public List<float[]> getnNW(){
+    public List<double[]> getnNW(){
         return nNW;
     }
 
-    public void writeEverythingToFile(List<float[]> nW,  List<float[]>nNW,List<float[]>nMW, List<float[]>nDW){
+    public void writeEverythingToFile(List<double[]> nW,  List<double[]>nNW,List<double[]>nMW, List<double[]>nDW){
         this.nW=nW;
         this.nNW=nNW;
         this.nMW=nMW;
         this.nDW=nDW;
 
         StringBuilder content = new StringBuilder();
-        for (float[] f : nW) {
+        for (double[] f : nW) {
             content.append("nW;");
             for(int i=0; i < f.length; i++){
                 content.append(f[i]+";");
@@ -127,7 +127,7 @@ public class FileRepo {
             content.append("\n");
         }
 
-        for (float[] f : nNW) {
+        for (double[] f : nNW) {
             content.append("nNW;");
             for(int i=0; i < f.length; i++){
                 content.append(f[i]+";");
@@ -135,7 +135,7 @@ public class FileRepo {
             content.append("\n");
         }
 
-        for (float[] f : nMW) {
+        for (double[] f : nMW) {
             content.append("nMW;");
             for(int i=0; i < f.length; i++){
                 content.append(f[i]+";");
@@ -143,7 +143,7 @@ public class FileRepo {
             content.append("\n");
         }
 
-        for (float[] f : nDW) {
+        for (double[] f : nDW) {
             content.append("nDW;");
             for(int i=0; i < f.length; i++){
                 content.append(f[i]+";");

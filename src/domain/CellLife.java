@@ -22,9 +22,9 @@ public class CellLife extends GameObject{
     //creating cell properties
     private int cellGeneration;
     private int lifeTime=0;
-    private int cellMaxFat=200; //max cell fat
+    private int cellMaxFat=400; //max cell fat
     private int cellFat =20; //cell fat at the beginning
-    private final int foodCalories =7;
+    private final int foodCalories =6;
     private int poisonEffect=10;
     private final int stoneEffect=1;
     private char isLooking = 'n';
